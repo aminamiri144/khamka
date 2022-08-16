@@ -21,11 +21,12 @@ from django.shortcuts import render
 
 def index(request):
     context = {}
-    return render(request, 'index.html', context=context)
+    return render(request, 'main1.html', context=context)
 
 
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('requestions/', include('requisitions.urls')),
+    path('', index),
 ]
