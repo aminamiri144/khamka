@@ -29,6 +29,9 @@ DEBUG = True
 ALLOWED_HOSTS = ['*']
 
 
+
+AUTH_USER_MODEL = 'customers.Customer'
+
 # Application definition
 
 INSTALLED_APPS = [
@@ -39,6 +42,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'requisitions.apps.RequisitionsConfig',
+    'customers.apps.CustomersConfig',
 ]
 
 MIDDLEWARE = [
