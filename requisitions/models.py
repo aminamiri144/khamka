@@ -8,7 +8,15 @@ import random
 def generate_request_id():
     d = jdatetime.date.today()
     num = random.randint(100, 999)
-    request_number = f'{d.year}{d.month}{d.day}{num}'
+    month = d.month
+    day = d.day
+    if month < 10:
+        month = f'0{month}'
+    
+    if day < 10:
+        day = f'0{day}'
+
+    request_number = f'{d.year}{month}{day}{num}'
     return request_number
 
 
@@ -33,7 +41,7 @@ class Request(models.Model):
     )
 
     number = models.AutoField(primary_key=True, verbose_name='شماره درخواست',
-                              default=generate_request_id(), max_length=12)
+                              default=generate_request_id())
     title = models.CharField(
         max_length=150, verbose_name='عنوان درخواست', blank=False, null=False)
     register_date = models.DateField(
