@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'requisitions.apps.RequisitionsConfig',
     'customers.apps.CustomersConfig',
+    'letters.apps.LettersConfig',
 ]
 
 MIDDLEWARE = [
