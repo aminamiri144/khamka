@@ -5,6 +5,29 @@ import random
 # Create your models here.
 
 
+class Category(models.Model):
+    class Meta:
+        verbose_name = 'دسته بندی'
+        verbose_name_plural = 'دسته بندی ها'
+
+    CATEGORY_TYPES = (
+        ('1', 'دسته بندی نامه ها'),
+        ('2', 'دسته بندی درخواست ها'),
+    )
+
+    subject = models.CharField(
+        max_length=100, blank=False, null=False, verbose_name='نام دسته بندی')
+
+    category_type = models.CharField(
+        choices=CATEGORY_TYPES, blank=False, null=False, verbose_name='نوع دسته بندی',  max_length=100)
+
+    description = models.TextField(
+        blank=True, null=True, verbose_name='توضیحات')
+
+    def __str__(self):
+        return f'{self.subject}  ({self.get_category_type_display()})'
+
+
 def generate_request_id():
     d = jdatetime.date.today()
     num = random.randint(100, 999)
@@ -53,6 +76,9 @@ class Request(models.Model):
                               default=1, blank=False, null=False, max_length=20)
     result = models.CharField(choices=RESULT_STATUS, verbose_name='نتیجه',
                               default=3, blank=False, null=False, max_length=20)
+
+    category = models.ForeignKey(
+        Category,blank=False, null=False, on_delete=models.PROTECT, verbose_name='دسته بندی', default='دسته بندی نشده')
 
     def __str__(self):
         return str(self.number)
