@@ -16,7 +16,13 @@ class Letter(models.Model):
     title = models.CharField(max_length=255, blank=False, null=False, verbose_name='موضوع نامه')
     register_date = models.DateField(verbose_name='تاریخ نامه', blank=False, null=False)
     descrption = models.TextField(verbose_name='توضیحات', blank=True, null=True)
-    image = models.ImageField(verbose_name='تصویر پیوست', blank=True, null=True)
+    image = models.ImageField(upload_to='lettersImage/', verbose_name='تصویر نامه', blank=True, null=True)
     recepiant = models.CharField(blank=True, max_length=50, null=True, verbose_name='گیرنده نامه')
-    request = models.ForeignKey(Request, blank=False, null=False, verbose_name='درخواست مرجع')
-    status = models.CharField(choices=LETTER_STATUS, blank=False, null=False, verbose_name='وضعیت نامه')
+    request = models.ForeignKey(Request, blank=False, null=False, verbose_name='درخواست مرجع', on_delete=models.PROTECT)
+    status = models.CharField(choices=LETTER_STATUS, blank=False, null=False, verbose_name='وضعیت نامه', max_length=30)
+
+
+    def __str__(self):
+        return self.letter_number
+
+    
