@@ -41,7 +41,7 @@
   --breakpoint-md: 768px;
   --breakpoint-lg: 992px;
   --breakpoint-xl: 1200px;
-  --font-family-sans-serif: "Overpass", sans-serif;
+  --font-family-sans-serif: "Shabnam", sans-serif, "feather";
   --font-family-monospace: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; }
 
 *,
@@ -50,7 +50,7 @@
   box-sizing: border-box; }
 
 html {
-  font-family: sans-serif;
+  font-family: "Shabnam";
   line-height: 1.15;
   -webkit-text-size-adjust: 100%;
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0); }
@@ -60,7 +60,7 @@ article, aside, figcaption, figure, footer, header, hgroup, main, nav, section {
 
 body {
   margin: 0;
-  font-family: "Overpass", sans-serif;
+  font-family: "Shabnam", sans-serif, "feather";
   font-size: 0.875rem;
   font-weight: 400;
   line-height: 1.5;

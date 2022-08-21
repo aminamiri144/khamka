@@ -35,7 +35,7 @@ def generate_request_id():
     day = d.day
     if month < 10:
         month = f'0{month}'
-    
+
     if day < 10:
         day = f'0{day}'
 
@@ -78,7 +78,10 @@ class Request(models.Model):
                               default=3, blank=False, null=False, max_length=20)
 
     category = models.ForeignKey(
-        Category,blank=False, null=False, on_delete=models.PROTECT, verbose_name='دسته بندی', default='دسته بندی نشده')
+        Category, blank=False, null=False, on_delete=models.PROTECT, verbose_name='دسته بندی', default='دسته بندی نشده')
+
+    created_by = models.ForeignKey(Customer, on_delete=models.PROTECT,
+                                   verbose_name='ایجاد شده توسط', related_name='created_by', blank=True, null=True)
 
     def __str__(self):
         return str(self.number)

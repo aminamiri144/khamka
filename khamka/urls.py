@@ -33,6 +33,7 @@ def index(request):
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('requestions/', include('requisitions.urls')),
+    path('letter/', include('letters.urls')),
     path('', index),
 ]
 
