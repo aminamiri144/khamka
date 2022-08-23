@@ -6,8 +6,8 @@ from letters.models import Letter
 # Create your views here.
 
 
-class LetterListAPI(APIView):
+# class LetterListAPI(APIView):
 
-    def get(self, request, *args, **kwargs):
-        letters = Letter.objects.all().values('letter_number', 'title')
-        return Response(letters)
+#     def get(self, request, *args, **kwargs):
+#         letters = Letter.objects.all().values('letter_number', 'title')
+#         return Response(letters)

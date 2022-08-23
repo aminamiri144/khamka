@@ -26,15 +26,23 @@ from django.conf.urls.static import static
 
 def index(request):
     context = {}
-    return render(request, 'main1.html', context=context)
+    return render(request, 'panel.html', context=context)
 
+def login(request):
+    context = {}
+    return render(request, 'login.html', context=context)
 
+def registerrequest(request):
+    context = {}
+    return render(request, 'rere.html', context=context)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('requestions/', include('requisitions.urls')),
     path('letter/', include('letters.urls')),
     path('panel/', index),
+    path('login/', login),
+    path('register/', registerrequest),
 ]
 
 

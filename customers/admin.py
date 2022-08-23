@@ -5,6 +5,6 @@ from customers.models import Customer
 
 
 class CustomerAdmin(admin.ModelAdmin):
-    list_display = ('username', 'first_name','last_name')
+    list_display = ('phoneNumber', 'fullname')
 
 admin.site.register(Customer, CustomerAdmin)

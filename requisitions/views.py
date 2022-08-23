@@ -1,11 +1,14 @@
-from urllib import request
 from django.shortcuts import render
 from django.http import HttpResponse
+from rest_framework import viewsets
+from requisitions.models import Request
+from requisitions.serializers import RequestSerializer
+from rest_framework.permissions import IsAuthenticated
+
 # Create your views here.
 
-def request_detail(request, rid):
-    return HttpResponse(f"test is {rid}")
 
-
-def requests_archive(request, year=None, month=None, day=None):
-    return HttpResponse(f'load the archive of {year}/{month}/{day}')
+class RequestViewSet(viewsets.ModelViewSet):
+    queryset = Request.objects.all()
+    serializer_class = RequestSerializer
+    permission_classes = [IsAuthenticated]

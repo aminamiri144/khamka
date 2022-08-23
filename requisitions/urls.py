@@ -1,9 +1,15 @@
 from urllib import request
 from django.urls import path
-from requisitions.views import request_detail, requests_archive
+from rest_framework.routers import DefaultRouter
+from requisitions.views import RequestViewSet
+
+
+router = DefaultRouter()
+router.register(r'request', RequestViewSet, basename='request') 
 
 
 urlpatterns = [
-    path('detail/<str:rid>/', request_detail),
-    path('archive/<int:year>/<int:month>/<int:day>/', requests_archive)
-]
+
+] 
+
+urlpatterns += router.urls
