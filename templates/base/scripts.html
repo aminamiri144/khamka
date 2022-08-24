@@ -31,6 +31,9 @@
 <script src="{% static 'customers/js/dropzone.min.js'%}"></script>
 <script src="{% static 'customers/js/uppy.min.js'%}"></script>
 <script src="{% static 'customers/js/quill.min.js'%}"></script>
+<script src="{% static 'customers/js/jquery.dataTables.min.js'%}"></script>
+<script src="{% static 'customers/js/dataTables.bootstrap4.min.js'%}"></script>
+
 <script>
   $('.select2').select2(
   {
@@ -234,7 +237,27 @@
     });
   }
 </script>
-<script src="{% static 'customers/js/apps.js'%}"></script>
+<script>
+      $('#dataTable-1').DataTable(
+      {
+        autoWidth: true,
+        "lengthMenu": [
+          [10, 20, 50, -1],
+          [10, 20, 50, "All"]
+        ]
+      });
+</script>
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-56159088-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag()
+  {
+    dataLayer.push(arguments);
+  }
+  gtag('js', new Date());
+  gtag('config', 'UA-56159088-1');
+</script>
 <!-- Global site tag (gtag.js) - Google Analytics -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=UA-56159088-1"></script>
 <script>
@@ -247,6 +270,8 @@
   gtag('js', new Date());
   gtag('config', 'UA-56159088-1');
 </script>
+<script src="{% static 'customers/js/apps.js'%}"></script>
+
 </div> <!-- .wrapper -->
 </body>
 </html>

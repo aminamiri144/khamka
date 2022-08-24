@@ -1,0 +1,87 @@
+{% extends 'base.html' %}
+{% load static %}\
+
+
+{% block content %}
+{% include "base/navigator.html" %}
+{% include "base/aside.html" %}
+{% block title %}لیست درخواست دهنده ها{% endblock%}
+
+  <main role="main" class="main-content">
+    <div class="container-fluid">
+      <div class="row justify-content-center">
+        <div class="col-12">
+          <h2 class="mb-2 page-title">لیست درخواست دهنده ها</h2>
+          <p class="card-text">لورم ایپسوم لورم ایپسوم لورم ایپسوم لورم ایپسوم توضیحات لیست لورم ایپسوم</p>
+          <div class="row my-4">
+            <!-- Small table -->
+            <div class="col-md-12">
+              <div class="card shadow">
+                <div class="card-body">
+                  <!-- table -->
+                  <table class="table datatables" id="dataTable-1">
+                    <thead>
+                      <tr>
+                        <th>شماره تلفن همراه</th>
+                        <th>نام و نام خانوادگی</th>
+                        <th>ارگان یا سازمان</th>
+                        <th>کد ملی</th>
+                        <th>جنسیت</th>
+                        <th>تلفن ثابت</th>
+                        <th>آدرس</th>
+                        <th>تاریخ ثبت اطلاعات</th>
+                        <th>عملیات</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>09103264969</td>
+                        <td>سیدامین امیری</td>
+                        <td>ندارد</td>
+                        <td>1250549167</td>
+                        <td>مرد</td>
+                        <td>03155452514</td>
+                        <td>کاشان خ بهشتی</td>
+                        <td>25/04/1401</td>
+                        <td>
+                        <div class="dropdown">
+                            <button class="btn btn-sm dropdown-toggle more-horizontal" id="dropdownMenuButton" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            </button>
+                          <div class="dropdown-menu dropdown-menu-right">
+                            <a class="dropdown-item" href="#">ویرایش</a>
+                            <a class="dropdown-item" href="#">حذف</a>
+                          </div>
+                        </div>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>091032534969</td>
+                        <td>تهرانی</td>
+                        <td>ندارد</td>
+                        <td>55555</td>
+                        <td>مرد</td>
+                        <td>4444</td>
+                        <td>کاشان خ بهشتی</td>
+                        <td>25/04/1401</td>
+                        <td>
+                        <div class="dropdown">
+                            <button class="btn btn-sm dropdown-toggle more-horizontal" id="dropdownMenuButton" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            </button>
+                          <div class="dropdown-menu dropdown-menu-right">
+                            <a class="dropdown-item" href="#">ویرایش</a>
+                            <a class="dropdown-item" href="#">حذف</a>
+                          </div>
+                        </div>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div> <!-- simple table -->
+          </div> <!-- end section -->
+        </div> <!-- .col-12 -->
+      </div> <!-- .row -->
+    </div> <!-- .container-fluid -->
+  </main>
+{% endblock %}

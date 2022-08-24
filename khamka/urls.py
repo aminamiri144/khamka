@@ -39,6 +39,7 @@ def registerrequest(request):
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('requestions/', include('requisitions.urls')),
+    path('customers/', include('customers.urls')),
     path('letter/', include('letters.urls')),
     path('panel/', index),
     path('login/', login),
