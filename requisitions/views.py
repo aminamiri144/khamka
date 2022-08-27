@@ -17,6 +17,5 @@ class RequestViewSet(viewsets.ModelViewSet):
     def list(self, request, *args, **kwargs):
         custom_data = {
             'data': RequestSerializer(self.get_queryset(),many=True).data,
-            'quote_of_the_day': 'test'
         }
         return Response(custom_data)
