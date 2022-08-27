@@ -65,7 +65,7 @@ class Request(models.Model):
     )
 
     number = models.AutoField(primary_key=True, verbose_name='شماره درخواست',
-                              default=generate_request_id(), unique=True)
+                              default=generate_request_id())
     title = models.CharField(
         max_length=150, verbose_name='عنوان درخواست', blank=False, null=False)
     register_date = models.DateField(
@@ -83,6 +83,18 @@ class Request(models.Model):
 
     created_by = models.ForeignKey(Customer, on_delete=models.PROTECT,
                                    verbose_name='ایجاد شده توسط', related_name='created_by', blank=True, null=True)
+
+    @property
+    def customer_name(self):
+        return self.customer.fullname
+    
+    @property
+    def result_d(self):
+        return self.get_result_display()
+
+    @property
+    def status_d(self):
+        return self.get_status_display()
 
     def __str__(self):
         return str(self.number)

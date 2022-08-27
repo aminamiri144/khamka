@@ -19,7 +19,7 @@
               <div class="card shadow">
                 <div class="card-body">
                   <!-- table -->
-                  <table class="table datatables" id="dataTable-1">
+                  {% comment %} <table class="table datatables" id="dataTable-1">
                     <thead>
                       <tr>
                         <th>شماره تلفن همراه</th>
@@ -75,7 +75,33 @@
                         </td>
                       </tr>
                     </tbody>
-                  </table>
+                  </table> {% endcomment %}
+
+                  <table id="example" class="table datatables" style="width:100%">
+                    <thead>
+                        <tr>
+                            <th>شماره درخواست</th>
+                            <th>عنوان درخواست</th>
+                            <th>تاریخ</th>
+                            <th>درخواست دهنده</th>
+                            <th>توضیحات</th>
+                            <th>وضعیت</th>
+                            <th>نتیجه</th>
+                        </tr>
+                    </thead>
+                    <tfoot>
+                        <tr>
+                            <th>شماره درخواست</th>
+                            <th>عنوان درخواست</th>
+                            <th>تاریخ</th>
+                            <th>درخواست دهنده</th>
+                            <th>توضیحات</th>
+                            <th>وضعیت</th>
+                            <th>نتیجه</th>
+                        </tr>
+                    </tfoot>
+                </table>
+
                 </div>
               </div>
             </div> <!-- simple table -->
@@ -85,3 +111,24 @@
     </div> <!-- .container-fluid -->
   </main>
 {% endblock %}
+{% block moreScript %}
+<script>
+    $(document).ready(function () {
+        $('#example').DataTable({
+            ajax: {
+                url: '/requestions/request/',
+                dataSrc: 'data',
+            },
+            columns: [
+                { data: 'number' },
+                { data: 'title' },
+                { data: 'register_date' },
+                { data: 'customer_name' },
+                { data: 'description' },
+                { data: 'status_d' },
+                { data: 'result_d' },
+            ],
+        });
+    });
+  </script>
+{% endblock  %}

@@ -14,7 +14,7 @@ class Customer(models.Model):
         ('3', 'حقوقی(سازمان)'),
     )
 
-    phoneNumber = models.CharField(primary_key=True ,max_length=11, verbose_name='شماره تلفن همراه', unique=True)
+    phoneNumber = models.CharField(primary_key=True ,max_length=11, verbose_name='شماره تلفن همراه')
     fullname = models.CharField(max_length=50, blank=False, null=False, verbose_name='نام و نام خانوادگی')
     organ = models.CharField(max_length=100, blank=True, null=True, verbose_name='سازمان یا شرکت')
     code_meli= models.CharField(max_length=10, blank=True, null=True, verbose_name='کد ملی')

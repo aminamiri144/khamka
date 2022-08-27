@@ -6,4 +6,4 @@ class RequestSerializer(serializers.ModelSerializer):
     class Meta:
         model = Request
         fields = ('number', 'title', 'register_date',
-                  'customer', 'description', 'status', 'result')
+                  'customer_name', 'description', 'status_d', 'result_d')
