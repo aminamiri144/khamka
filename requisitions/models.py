@@ -29,17 +29,7 @@ class Category(models.Model):
 
 
 def generate_request_id():
-    # d = jdatetime.date.today()
     num = random.randint(10000, 99999)
-    # month = d.month
-    # day = d.day
-    # if month < 10:
-    #     month = f'0{month}'
-
-    # if day < 10:
-    #     day = f'0{day}'
-
-    # request_number = f'{d.year}{month}{day}{num}'
     request_number = f'{num}'
     return request_number
 

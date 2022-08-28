@@ -3,5 +3,4 @@ from django.urls import path
 
 
 urlpatterns = [
-    # path('list/', LetterListAPI.as_view(), name='letters-list'),
 ]
