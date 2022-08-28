@@ -2,6 +2,7 @@ from django.db import models
 from customers.models import Customer
 import jdatetime
 import random
+from jdatetime import datetime as jd
 # Create your models here.
 
 
@@ -29,17 +30,7 @@ class Category(models.Model):
 
 
 def generate_request_id():
-    # d = jdatetime.date.today()
     num = random.randint(10000, 99999)
-    # month = d.month
-    # day = d.day
-    # if month < 10:
-    #     month = f'0{month}'
-
-    # if day < 10:
-    #     day = f'0{day}'
-
-    # request_number = f'{d.year}{month}{day}{num}'
     request_number = f'{num}'
     return request_number
 
@@ -96,6 +87,14 @@ class Request(models.Model):
     def status_d(self):
         return self.get_status_display()
 
+    def jd_register_date(self):
+        try:
+            return jd.fromgregorian(
+                date=self.register_date,
+            ).strftime('%Y/%m/%d')
+        except:
+            return 'ثبت نشده!'
+
     def __str__(self):
         return str(self.number)
 
@@ -119,3 +118,11 @@ class Survey(models.Model):
     request = models.ForeignKey(Request, on_delete=models.PROTECT)
     date = models.DateTimeField(auto_now_add=True, verbose_name='تاریخ ثبت نظرسنجی')
     score = models.CharField(choices=SCORES, blank=True, null=True, verbose_name='امتیاز', max_length=20, default='6')
+
+    def jd_date(self):
+        try:
+            return jd.fromgregorian(
+                date=self.date,
+            ).strftime('%Y/%m/%d')
+        except:
+            return 'ثبت نشده!'

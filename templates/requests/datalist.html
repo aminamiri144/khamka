@@ -1,11 +1,10 @@
 {% extends 'base.html' %}
-{% load static %}\
+{% load static %}
 
 
 {% block content %}
 {% include "base/navigator.html" %}
 {% include "base/aside.html" %}
-{% block title %}لیست درخواست دهنده ها{% endblock%}
 
   <main role="main" class="main-content">
     <div class="container-fluid">
@@ -26,22 +25,12 @@
                             <th>عنوان درخواست</th>
                             <th>تاریخ</th>
                             <th>درخواست دهنده</th>
-                            <th>توضیحات</th>
                             <th>وضعیت</th>
                             <th>نتیجه</th>
+                            <th>عملیات</th>
                         </tr>
                     </thead>
-                    <tfoot>
-                        <tr>
-                            <th>شماره درخواست</th>
-                            <th>عنوان درخواست</th>
-                            <th>تاریخ</th>
-                            <th>درخواست دهنده</th>
-                            <th>توضیحات</th>
-                            <th>وضعیت</th>
-                            <th>نتیجه</th>
-                        </tr>
-                    </tfoot>
+                 
                 </table>
 
                 </div>
@@ -52,25 +41,62 @@
       </div> <!-- .row -->
     </div> <!-- .container-fluid -->
   </main>
+
+  <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          ...
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary">Save changes</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
 {% endblock %}
 {% block moreScript %}
 <script>
     $(document).ready(function () {
-        $('#example').DataTable({
+        var table = $('#example').DataTable({
             ajax: {
-                url: '/requestions/request/',
+                url: '/requests/request/',
                 dataSrc: 'data',
             },
+            columnDefs: [
+                {
+                    targets: -1,
+                    data: null,
+                    {% comment %} defaultContent: '<button class="btn btn-info btn-xs" type="button">جزییات</button> <button class="btn btn-warning btn-xs" type="button">ویرایش</button>', {% endcomment %}
+                    defaultContent: '<button class="btn btn-info btn-xs" type="button">جزییات</button> <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#exampleModal">ویرایش</button>',
+                },
+            ],
             columns: [
                 { data: "number" },
                 { data: "title" },
-                { data: "register_date" },
+                { data: "jd_register_date" },
                 { data: "customer_name" },
-                { data: "description" },
                 { data: "status_d" },
                 { data: "result_d" },
+                { data: "" },
             ],
+            
         });
+
+    $('#example tbody').on('click', '.btn-info', function () {
+        var data = table.row($(this).parents('tr:first')).data();
+        window.open('/requests/request/'+ data['number']);
+    });
+    
     });
   </script>
 {% endblock  %}
