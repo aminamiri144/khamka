@@ -42,10 +42,9 @@ urlpatterns = [
     path('customers/', include('customers.urls')),
     path('letter/', include('letters.urls')),
     path('panel/', index),
-    path('login/', login),
+    path('accounts/login/', login),
     path('register/', registerrequest),
 ]
-
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 urlpatterns += static(settings.ASSETS_URL, document_root=settings.ASSETS_ROOT)

@@ -1,5 +1,6 @@
 
 from django.db import models
+from jdatetime import datetime as jd
 
 
 # Create your models here.
@@ -22,6 +23,20 @@ class Customer(models.Model):
     phone = models.CharField(max_length=11, blank=True,null=True, verbose_name='تلفن ثابت')
     address = models.CharField(max_length=255, blank=True, null=True, verbose_name='آدرس')
     register_date = models.DateTimeField(auto_now_add=True, verbose_name='تاریخ ثبت نظرسنجی')
+
+    def jd_register_date(self):
+        try:
+            return jd.fromgregorian(
+                date=self.register_date,
+            ).strftime('%Y/%m/%d')
+        except:
+            return 'ثبت نشده!'
+
+    def codeMeli(self):
+        if self.code_meli is None:
+            return "ثبت نشده"
+        else:
+            return self.code_meli
 
     def __str__(self):
         return self.fullname

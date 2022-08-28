@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+  {% include 'base/navigator.html' %}
+  {% include 'base/aside.html' %}
+  <main role="main" class="main-content">
+    <div class="container-fluid">
+      <div class="row justify-content-center">
+        <div class="col-12">
+          <h2 class="mb-2 page-title">لیست درخواست دهنده ها</h2>
+          <p class="card-text">لیست افراد و سازمان های درخواست دهنده</p>
+          <div class="row my-4">
+            <!-- Small table -->
+            <div class="col-md-12">
+              <div class="card shadow">
+                <div class="card-body">
+                  <!-- table -->
+                  <table id="dataTable-1" class="table datatables" style="width:100%">
+                    <thead>
+                      <tr>
+                        <th>شماره تلفن همراه</th>
+                        <th>نام و نام خانوادگی</th>
+                        <th>سازمان</th>
+                        <th>کد ملی</th>
+                        <th>جنسیت</th>
+                        <th>تلفن ثابت</th>
+                        <th>تاریخ ثبت</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {% for customer in customers %}
+                        <tr>
+                          <td>{{ customer.phoneNumber }}</td>
+                          <td>{{ customer.fullname }}</td>
+                          <td>{{ customer.organ }}</td>
+                          <td>{{ customer.codeMeli }}</td>
+                          <td>{{ customer.get_sex_display }}</td>
+                          <td>{{ customer.phone }}</td>
+                          <td>{{ customer.jd_register_date }}</td>
+                        </tr>
+                      {% endfor %}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div> <!-- simple table -->
+        </div> <!-- end section -->
+      </div> <!-- .col-12 -->
+    </div> <!-- .row -->
+  </main>
+{% endblock %}
+
+{% block moreScript %}
+<script src="{% static 'customers/js/datatablescripts.js'%}"></script>
+{% endblock moreScript %}
