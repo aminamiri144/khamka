@@ -19,3 +19,16 @@ class LoginRequiredMixin(object):
             return login_required(view)
         else:
             return view
+
+
+def index(request):
+    context = {}
+    return render(request, 'panel.html', context=context)
+
+def login(request):
+    context = {}
+    return render(request, 'login.html', context=context)
+
+def registerrequest(request):
+    context = {}
+    return render(request, 'rere.html', context=context)

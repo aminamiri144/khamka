@@ -37,6 +37,18 @@ class Customer(models.Model):
             return "ثبت نشده"
         else:
             return self.code_meli
+    
+    def organ_name(self):
+        if self.organ is None:
+            return "ثبت نشده"
+        else:
+            return self.organ
+
+    def phonee(self):
+        if self.phone is None:
+            return "ثبت نشده"
+        else:
+            return self.phone
 
     def __str__(self):
         return self.fullname

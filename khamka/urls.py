@@ -19,22 +19,11 @@ from django.urls import path, include
 from django.shortcuts import render
 from django.conf import settings
 from django.conf.urls.static import static
+from khamka.views import *
 
 
 
 
-
-def index(request):
-    context = {}
-    return render(request, 'panel.html', context=context)
-
-def login(request):
-    context = {}
-    return render(request, 'login.html', context=context)
-
-def registerrequest(request):
-    context = {}
-    return render(request, 'rere.html', context=context)
 
 urlpatterns = [
     path('admin/', admin.site.urls),

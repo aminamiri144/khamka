@@ -6,10 +6,10 @@
       {% block content %}
       
       {% endblock content %}
-      {% include "base/scripts.html" %}
-      {% block moreScript %}
       
-      {% endblock moreScript %}
     </div> <!-- .wrapper -->
+    {% include "base/scripts.html" %}
+    {% block moreScript %}
+    {% endblock moreScript %}
   </body>
 </html>

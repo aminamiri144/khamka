@@ -25,6 +25,7 @@
                         <th>جنسیت</th>
                         <th>تلفن ثابت</th>
                         <th>تاریخ ثبت</th>
+                        <th>عملیات</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -32,11 +33,13 @@
                         <tr>
                           <td>{{ customer.phoneNumber }}</td>
                           <td>{{ customer.fullname }}</td>
-                          <td>{{ customer.organ }}</td>
+                          <td>{{ customer.organ_name }}</td>
                           <td>{{ customer.codeMeli }}</td>
                           <td>{{ customer.get_sex_display }}</td>
-                          <td>{{ customer.phone }}</td>
+                          <td>{{ customer.phonee }}</td>
                           <td>{{ customer.jd_register_date }}</td>
+                          <td><button type="button" class="btn btn-primary btn-sm" onclick="update_user('{{ customer.phoneNumber }}');" data-toggle="modal"
+                            data-target="#registeruser">ویرایش</button></td>
                         </tr>
                       {% endfor %}
                     </tbody>
@@ -49,8 +52,26 @@
       </div> <!-- .col-12 -->
     </div> <!-- .row -->
   </main>
+
+
+
+{% include 'base/updateModal.html' %}
 {% endblock %}
 
 {% block moreScript %}
 <script src="{% static 'customers/js/datatablescripts.js'%}"></script>
+
+<script>
+function update_user(id) {
+    $.ajax({
+        url: '/customers/update/' + id + '/',
+        type: 'GET',
+        success: function (data) {
+            $("#modal_body").html(data);
+        }
+    })
+}
+</script>
+
+
 {% endblock moreScript %}
