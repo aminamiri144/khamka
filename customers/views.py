@@ -8,7 +8,7 @@ from customers.forms import CustomerForm
 
 # Create your views here.
 class CustomerListView(LoginRequiredMixin, ListView):
-    paginate_by = 3
+    paginate_by = 10
     model = Customer
     context_object_name = 'customers'
     template_name = 'customers/list.html'

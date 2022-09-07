@@ -8,7 +8,6 @@
 
 
   <main role="main" class="main-content">
-
     <div class="container-fluid">
         {% if messages %}
         {% for message in messages %}
@@ -22,69 +21,91 @@
         {% endif %}
       <div class="row justify-content-center">
         <div class="col-12">
-          <h2 class="mb-2 page-title">لیست درخواست دهنده ها</h2>
-          <p class="card-text">لیست افراد و سازمان های درخواست دهنده</p>
+            <h2 class="mb-2 page-title">لیست درخواست دهنده ها</h2>
+            <p class="card-text">لیست افراد و سازمان های درخواست دهنده</p>
           <div class="row my-4">
             <!-- Small table -->
             <div class="col-md-12">
               <div class="card shadow">
                 <div class="card-body">
-                  <!-- table -->
-                  <table id="dataTable-1" class="table datatables" style="width:100%">
+          <div class="toolbar row mb-3">
+            <div class="col">
+              <form class="form-inline" action="#" method="post" >
+                <div class="form-row">
+                  <div class="form-group col-auto">
+                    <label for="search">جستجو درخواست دهنده : </label>
+                    <input type="text" class="form-control" id="search" value="" placeholder="مقدار مورد نظر را وارد کنید ">
+                </div>
+                <button type="submit" class="btn btn-warning"><span class="fe fe-search fe-14 mr-2"></span>جستجو</button>
+                </div>
+              </form>
+            </div>
+            <div class="col ml-auto">
+              <div class="dropdown float-right">
+                <button class="btn btn-success float-right ml-3" type="button">اضافه کردن +</button>
+              </div>
+            </div>
+          </div>
+                  <table class="table table-hover">
                     <thead>
-                      <tr>
-                        <th>شماره تلفن همراه</th>
-                        <th>نام و نام خانوادگی</th>
-                        <th>سازمان</th>
-                        <th>کد ملی</th>
-                        <th>جنسیت</th>
-                        <th>تلفن ثابت</th>
-                        <th>تاریخ ثبت</th>
-                        <th>عملیات</th>
-                      </tr>
+                        <tr>
+                            <th scope="col">شماره تلفن همراه</th>
+                            <th scope="col">نام و نام خانوادگی</th>
+                            <th scope="col">سازمان</th>
+                            <th scope="col">کد ملی</th>
+                            <th scope="col">جنسیت</th>
+                            <th scope="col">تلفن ثابت</th>
+                            <th scope="col">تاریخ ثبت</th>
+                            <th scope="col">عملیات</th>
+                        </tr>
                     </thead>
                     <tbody>
-                      {% for customer in customers %}
+                        {% for customer in customers %}
                         <tr>
-                          <td>{{ customer.phoneNumber }}</td>
+                          <th scope="row">{{ customer.phoneNumber }}</th>
                           <td>{{ customer.fullname }}</td>
                           <td>{{ customer.organ_name }}</td>
                           <td>{{ customer.codeMeli }}</td>
                           <td>{{ customer.get_sex_display }}</td>
                           <td>{{ customer.phonee }}</td>
                           <td>{{ customer.jd_register_date }}</td>
-                          <td><button type="button" class="btn btn-primary btn-sm" onclick="update_user('{{ customer.phoneNumber }}');" data-toggle="modal"
+                          <td><button type="button" class="btn btn-primary btn-sm" onclick="update_user('{{ customer.id }}');" data-toggle="modal"
                             data-target="#registeruser">ویرایش</button></td>
                         </tr>
                       {% endfor %}
                     </tbody>
                   </table>
 
-                <nav aria-label="">
-                    <ul class="pagination">
-                    {% if page_obj.has_previous %}
-                    <li class="page-item">
-                        <a class="page-link" href="?page={{ page_obj.previous_page_number }}" tabindex="-1">قبلی</a>
-                    </li>
-                    {% else %}
-                    <li class="page-item disabled">
-                        <a class="page-link" href="">صفحه قبل</a>
-                    </li>
-                    {% endif %}
-                    <li class="page-item active">
-                        <a class="page-link" href="#">{{ page_obj.number }} <span class="sr-only">(صفحه فعلی)</span></a>
-                    </li>
-                    {% if page_obj.has_next %}
-                    <li class="page-item">
-                        <a class="page-link" href="?page={{ page_obj.next_page_number }}">صفحه بعد</a>
-                    </li>
-                    {% else %}
-                    <li class="page-item disabled">
-                        <a class="page-link" href="">صفحه بعد</a>
-                    </li>
-                    {% endif %}
-                    </ul>
-                </nav>
+
+                  <div class="row">
+                    <nav aria-label="">
+                        <ul class="pagination">
+                        {% if page_obj.has_previous %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ page_obj.previous_page_number }}" tabindex="-1">قبلی</a>
+                        </li>
+                        {% else %}
+                        <li class="page-item disabled">
+                            <a class="page-link" href="">صفحه قبل</a>
+                        </li>
+                        {% endif %}
+                        <li class="page-item active">
+                            <a class="page-link" href="#">{{ page_obj.number }} <span class="sr-only">(صفحه فعلی)</span></a>
+                        </li>
+                        {% if page_obj.has_next %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ page_obj.next_page_number }}">صفحه بعد</a>
+                        </li>
+                        {% else %}
+                        <li class="page-item disabled">
+                            <a class="page-link" href="">صفحه بعد</a>
+                        </li>
+                        {% endif %}
+                        </ul>
+                    </nav>
+
+                  </div>
+             
 
                 </div>
               </div>
@@ -101,7 +122,7 @@
 {% endblock %}
 
 {% block moreScript %}
-<script src="{% static 'customers/js/datatablescripts.js'%}"></script>
+{% comment %} <script src="{% static 'customers/js/datatablescripts.js'%}"></script> {% endcomment %}
 <script>
 function update_user(id) {
     $.ajax({
