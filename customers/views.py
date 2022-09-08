@@ -1,3 +1,4 @@
+from unicodedata import name
 from django.views.generic.list import ListView
 from django.views.generic.edit import CreateView, UpdateView
 from khamka.views import LoginRequiredMixin, SuccessMessageMixin
@@ -12,6 +13,18 @@ class CustomerListView(LoginRequiredMixin, ListView):
     model = Customer
     context_object_name = 'customers'
     template_name = 'customers/list.html'
+
+
+
+    def get_queryset(self):
+        value = self.request.GET.get('q', '')
+        option = self.request.GET.get('option', '')
+        query = {f'{option}__icontains': value}
+        if value:
+            object_list = self.model.objects.filter(**query)
+        else:
+            object_list = self.model.objects.all()
+        return object_list
     
 
 class CustomerCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):

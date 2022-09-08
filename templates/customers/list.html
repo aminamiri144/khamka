@@ -30,23 +30,32 @@
                 <div class="card-body">
           <div class="toolbar row mb-3">
             <div class="col">
-              <form class="form-inline" action="#" method="post" >
+              <form class="form-inline" action="" method="GET" >
                 <div class="form-row">
                   <div class="form-group col-auto">
-                    <label for="search">جستجو درخواست دهنده : </label>
-                    <input type="text" class="form-control" id="search" value="" placeholder="مقدار مورد نظر را وارد کنید ">
-                </div>
-                <button type="submit" class="btn btn-warning"><span class="fe fe-search fe-14 mr-2"></span>جستجو</button>
+                    <label for="search">جستجو : </label>
+                    <input type="text" class="form-control ml-2" id="search" name="q" placeholder="مقدار مورد نظر را وارد کنید ">
+                    <label for="searchOption" class="ml-2">جستجو براساس :</label>
+                    <select class="form-control my-1 mr-sm-2 ml-2" id="searchOption" name="option">
+                        <option value="fullname">نام و نام خانوادگی</option>
+                        <option value="phoneNumber">شماره همراه</option>
+                        <option value="code_meli">کد ملی</option>
+                        <option value="organ">سازمان</option>
+                      </select>
+                    <button type="submit" class="btn mb-2 btn-warning"><span class="fe fe-search fe-14 mr-1"></span>جستجو</button>
+                    </div>
                 </div>
               </form>
             </div>
             <div class="col ml-auto">
-              <div class="dropdown float-right">
-                <button class="btn btn-success float-right ml-3" type="button">اضافه کردن +</button>
-              </div>
+                <a href="{% url 'customer-create' %}" class="btn btn-success float-right ml-3" type="button">اضافه کردن +</a>
             </div>
           </div>
-                  <table class="table table-hover">
+                {% if customers %}
+                <div class="table-responsive">
+
+                
+                  <table class="table table-hover text-nowrap">
                     <thead>
                         <tr>
                             <th scope="col">شماره تلفن همراه</th>
@@ -59,7 +68,10 @@
                             <th scope="col">عملیات</th>
                         </tr>
                     </thead>
+                    
                     <tbody>
+                       
+                        
                         {% for customer in customers %}
                         <tr>
                           <th scope="row">{{ customer.phoneNumber }}</th>
@@ -73,9 +85,20 @@
                             data-target="#registeruser">ویرایش</button></td>
                         </tr>
                       {% endfor %}
+                     
                     </tbody>
+                   
                   </table>
 
+                </div>
+                {% else %}
+                    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                        هیچ نتیجه ای در جستجو یافت نشد! مجددا تلاش کنید.
+                      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                      </button>
+                    </div>
+                {% endif %}
 
                   <div class="row">
                     <nav aria-label="">
