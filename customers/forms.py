@@ -3,13 +3,10 @@ from customers.models import Customer
 from django.core.exceptions import ValidationError
 
 
-
-
 class CustomerForm(forms.ModelForm):
-    class Meta: 
+    class Meta:
         model = Customer
         fields = '__all__'
-
 
     def __init__(self, *args, **kwargs):
         super(CustomerForm, self).__init__(*args, **kwargs)
@@ -21,8 +18,9 @@ class CustomerForm(forms.ModelForm):
         if Customer.objects.filter(phoneNumber=phoneNumber).exists():
             raise ValidationError(f"شماره تلفن {phoneNumber} قبلا ثبت شده ")
 
+
 class CustomerUpdateForm(CustomerForm):
-    class Meta: 
+    class Meta:
         model = Customer
         fields = '__all__'
         exclude = ['id']

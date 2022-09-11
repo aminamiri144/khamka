@@ -18,8 +18,8 @@
             {% endif %}
             <div class="row justify-content-center">
                 <div class="col-12">
-                    <h2 class="mb-2 page-title">لیست درخواست دهنده ها</h2>
-                    <p class="card-text">لیست افراد و سازمان های درخواست دهنده</p>
+                    <h2 class="mb-2 page-title">لیست درخواست ها</h2>
+                    <p class="card-text">لیست درخواست های ارباب رجوع و نهاد ها</p>
                     <div class="row my-4">
                         <!-- Small table -->
                         <div class="col-md-12">
@@ -41,16 +41,16 @@
                                                                 id="searchOption"
                                                                 name="option">
                                                             <option value="fullname">
-                                                                نام و نام خانوادگی
+                                                                شماره درخواست
                                                             </option>
                                                             <option value="phoneNumber">
-                                                                شماره همراه
+                                                                عنوان درخواست
                                                             </option>
                                                             <option value="code_meli">
-                                                                کد ملی
+                                                                نام خانوادگی درخواست دهنده
                                                             </option>
                                                             <option value="organ">
-                                                                سازمان
+                                                                شماره همراه درخواست دهنده
                                                             </option>
                                                         </select>
                                                         <button type="submit" class="btn mb-2 btn-warning">
@@ -61,43 +61,48 @@
                                             </form>
                                         </div>
                                         <div class="col ml-auto">
-                                            <a href="{% url 'customer-create' %}"
+                                            <a href="{% url 'request-create' %}"
                                                class="btn btn-success float-right ml-3"
                                                type="button">اضافه کردن +</a>
                                         </div>
                                     </div>
-                                    {% if customers %}
+                                    {% if requests %}
                                         <div class="table-responsive">
                                             <table class="table table-hover text-nowrap">
                                                 <thead>
                                                     <tr>
-                                                        <th scope="col">شماره تلفن همراه</th>
-                                                        <th scope="col">نام و نام خانوادگی</th>
-                                                        <th scope="col">سازمان</th>
-                                                        <th scope="col">کد ملی</th>
-                                                        <th scope="col">جنسیت</th>
-                                                        <th scope="col">تلفن ثابت</th>
-                                                        <th scope="col">تاریخ ثبت</th>
+                                                        <th scope="col">شماره درخواست</th>
+                                                        <th scope="col">عنوان درخواست</th>
+                                                        <th scope="col">درخواست دهنده</th>
+                                                        <th scope="col">وضعیت</th>
+                                                        <th scope="col">نتیجه</th>
+                                                        <th scope="col">دسته بندی</th>
                                                         <th scope="col">عملیات</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    {% for customer in customers %}
+                                                    {% for request in requests %}
                                                         <tr>
-                                                            <th scope="row">{{ customer.phoneNumber }}</th>
-                                                            <td>{{ customer.fullname }}</td>
-                                                            <td>{{ customer.organ_name }}</td>
-                                                            <td>{{ customer.codeMeli }}</td>
-                                                            <td>{{ customer.get_sex_display }}</td>
-                                                            <td>{{ customer.phonee }}</td>
-                                                            <td>{{ customer.jd_register_date }}</td>
+                                                            <th scope="row">{{ request.number }}</th>
+                                                            <td>{{ request.title }}</td>
+                                                            <td>{{ request.customer_name }}</td>
+                                                            <td>{{ request.get_status_display }}</td>
+                                                            <td>{{ request.get_result_display }}</td>
+                                                            <td>{{ request.category }}</td>
                                                             <td>
                                                                 <button type="button"
-                                                                        class="btn btn-primary btn-sm"
-                                                                        onclick="update_user('{{ customer.id }}');"
+                                                                        class="btn btn-warning btn-sm"
+                                                                        onclick="modal_url('/requestions/update/{{ request.id }}', 'update');"
                                                                         data-toggle="modal"
                                                                         data-target="#update_modal">
                                                                     ویرایش
+                                                                </button>
+                                                                <button type="button"
+                                                                        class="btn btn-info btn-sm"
+                                                                        onclick="modal_url('/requestions/detail/{{ request.id }}', 'detail');"
+                                                                        data-toggle="modal"
+                                                                        data-target="#detail_modal">
+                                                                    مشاهده
                                                                 </button>
                                                             </td>
                                                         </tr>
@@ -155,16 +160,17 @@
         <!-- .row -->
     </main>
     {% include 'base/updateModal.html' %}
+    {% include 'base/detailModal.html' %}
 {% endblock content %}
 {% block moreScript %}
     {% comment %} <script src="{% static 'customers/js/datatablescripts.js'%}"></script> {% endcomment %}
     <script>
-function update_user(id) {
+function modal_url(url, type) {
     $.ajax({
-        url: '/customers/update/' + id + '/',
+        url: url,
         type: 'GET',
         success: function (data) {
-            $("#update_modal_body").html(data);
+            $("#"+ type +"_modal_body").html(data);
         }
     })
 }

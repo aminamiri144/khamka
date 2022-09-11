@@ -29,7 +29,7 @@ urlpatterns = [
     path('requestions/', include('requisitions.urls')),
     path('customers/', include('customers.urls')),
     path('letter/', include('letters.urls')),
-    path('panel/', index),
+    path('panel/', index, name="panel"),
     path('accounts/login/', login),
     path('register/', registerrequest),
 ]

@@ -1,8 +1,12 @@
-from urllib import request
 from django.urls import path
+from requisitions.views import RequestListView, RequestCreateView, RequestDetailView, RequestUpdateView
 
 
-
-urlpatterns = [] 
+urlpatterns = [
+    path('', RequestListView.as_view(), name='request-list'),
+    path('create/', RequestCreateView.as_view(), name='request-create'),
+    path('update/<str:pk>/', RequestUpdateView.as_view(), name='request-update'),
+    path('detail/<str:pk>/', RequestDetailView.as_view(), name='request-detail'),
+]
 
 

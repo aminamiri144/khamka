@@ -54,8 +54,15 @@ class Request(models.Model):
         ('3', 'نامشخص'),
     )
 
-    number = models.AutoField(primary_key=True, verbose_name='شماره درخواست',
-                              default=generate_request_id())
+
+    CREATED_BY = (
+        ('1', 'درخواست دهنده'),
+        ('2', 'اپراتور خانه ملت'),
+        ('3', 'نامشخص'),
+    )
+
+    number = models.CharField(verbose_name='شماره درخواست',
+                              default=generate_request_id(), max_length=7)
     title = models.CharField(
         max_length=150, verbose_name='عنوان درخواست', blank=False, null=False)
     register_date = models.DateField(
@@ -71,8 +78,7 @@ class Request(models.Model):
     category = models.ForeignKey(
         Category, blank=True, null=True, on_delete=models.PROTECT, verbose_name='دسته بندی')
 
-    created_by = models.ForeignKey(Customer, on_delete=models.PROTECT,
-                                   verbose_name='ایجاد شده توسط', related_name='created_by', blank=True, null=True)
+    created_by = models.CharField(verbose_name='ایجاد شده توسط', blank=False, null=False, max_length=20, choices=CREATED_BY, default='3')
 
     @property
     def customer_name(self):
