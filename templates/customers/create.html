@@ -1,55 +1,55 @@
-
-
-
-
-{% extends 'base.html' %}
+{% extends "base.html" %}
 {% load static %}
 {% block content %}
-  {% include 'base/navigator.html' %}
-  {% include 'base/aside.html' %}
-  <main role="main" class="main-content">
-    <div class="container-fluid">
-      <div class="row justify-content-center">
-        <div class="col-12">
-          <h2 class="mb-2 page-title">لیست درخواست دهنده ها</h2>
-          <p class="card-text">لیست افراد و سازمان های درخواست دهنده</p>
-          <div class="row my-4">
-            <!-- Small table -->
-            <div class="col-md-12">
-              <div class="card shadow">
-                <div class="card-body">
-                    <div class="col-md-6">
-                    <form class="needs-validation" action="{% url 'customer-create' %}" method="post" autocomplete="off" id="customer-form" novalidate>
-                        {% csrf_token %}
-                        {% for field in form %}
-                        <div class="form-group row">
-                            
-                            <label class="col-form-label col-lg-3 col-sm-12">{{ field.label_tag }}</label>
-                            <div class="col-lg-9 col-md-9 col-sm-12">
-                                {{ field }}
-                                <div class="invalid-feedback">مقدار مناسب را وارد کنید.</div>
-                                {% for error in field.errors %}
-                                    <div class="feedbackinvalid">{{ error|escape }}</div>
-                                {% endfor %}
+    {% include 'base/navigator.html' %}
+    {% include 'base/aside.html' %}
+    <main role="main" class="main-content">
+        <div class="container-fluid">
+            <div class="row justify-content-center">
+                <div class="col-12">
+                    <h2 class="mb-2 page-title">لیست درخواست دهنده ها</h2>
+                    <p class="card-text">لیست افراد و سازمان های درخواست دهنده</p>
+                    <div class="row my-4">
+                        <!-- Small table -->
+                        <div class="col-md-12">
+                            <div class="card shadow">
+                                <div class="card-body">
+                                    <div class="col-md-6">
+                                        <form class="needs-validation"
+                                              action="{% url 'customer-create' %}"
+                                              method="post"
+                                              autocomplete="off"
+                                              id="customer-form"
+                                              novalidate>
+                                            {% csrf_token %}
+                                            {% for field in form %}
+                                                <div class="form-group row">
+                                                    <label class="col-form-label col-lg-3 col-sm-12">{{ field.label_tag }}</label>
+                                                    <div class="col-lg-9 col-md-9 col-sm-12">
+                                                        {{ field }}
+                                                        <div class="invalid-feedback">مقدار مناسب را وارد کنید.</div>
+                                                        {% for error in field.errors %}<div class="feedbackinvalid">{{ error|escape }}</div>{% endfor %}
+                                                    </div>
+                                                </div>
+                                            {% endfor %}
+                                            <button type="submit" class="btn btn-success">ثبت نام</button>
+                                        </form>
+                                    </div>
+                                </div>
                             </div>
-                            
                         </div>
-                        {% endfor %}
-                        <button type="submit" class="btn btn-success">ثبت نام</button>
-                    </form>
                     </div>
+                    <!-- simple table -->
                 </div>
-              </div>
+                <!-- end section -->
             </div>
-          </div> <!-- simple table -->
-        </div> <!-- end section -->
-      </div> <!-- .col-12 -->
-    </div> <!-- .row -->
-  </main>
-{% endblock %}
-
+            <!-- .col-12 -->
+        </div>
+        <!-- .row -->
+    </main>
+{% endblock content %}
 {% block moreScript %}
-<script>
+    <script>
     // Example starter JavaScript for disabling form submissions if there are invalid fields
     (function() {
       'use strict';
@@ -68,5 +68,5 @@
         });
       }, false);
     })();
-</script>
+    </script>
 {% endblock moreScript %}
