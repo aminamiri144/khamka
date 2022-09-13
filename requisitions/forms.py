@@ -1,10 +1,13 @@
 from django import forms
 from requisitions.models import Request
 from django.core.exceptions import ValidationError
-
+from khamka.datetimeUtils import change_date_to_english
 
 
 class RequestsForm(forms.ModelForm):
+    
+    register_date = forms.CharField(label='تاریخ درخواست:')
+
     class Meta:
         model = Request
         fields = '__all__'
@@ -17,10 +20,36 @@ class RequestsForm(forms.ModelForm):
     def clean_number(self):
         number = self.cleaned_data['number']
         if Request.objects.filter(number=number).exists():
-            raise ValidationError(f"شماره درخواست {number} قبلا ثبت شده ")
+            raise ValidationError(f".شماره درخواست {number} قبلا ثبت شده! یک شماره دلخواه 5 رقمی وارد کنید ")
+        else:
+            return number
+    
+    def clean_register_date(self):
+        register_date = self.cleaned_data['register_date']
+        try:
+            register_date = change_date_to_english(register_date, 2)
+        except:
+            register_date = None
+        return register_date
 
-class RequestsUpdateForm(RequestsForm):
+class RequestsUpdateForm(forms.ModelForm):
+    register_date = forms.CharField(label='تاریخ درخواست:')
+
     class Meta:
         model = Request
         fields = '__all__'
         exclude = ['number']
+
+    
+    def __init__(self, *args, **kwargs):
+        super(RequestsUpdateForm, self).__init__(*args, **kwargs)
+        for visible in self.visible_fields():
+            visible.field.widget.attrs['class'] = 'form-control'
+
+    def clean_register_date(self):
+        register_date = self.cleaned_data['register_date']
+        try:
+            register_date = change_date_to_english(register_date, 2)
+        except:
+            register_date = register_date
+        return register_date

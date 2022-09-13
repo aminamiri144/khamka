@@ -15,7 +15,7 @@ class RequestListView(LoginRequiredMixin ,ListView):
 
 
 
-class RequestCreateView(LoginRequiredMixin , SuccessMessageMixin,CreateView):
+class RequestCreateView(LoginRequiredMixin , SuccessMessageMixin, CreateView):
     model = Request
     template_name = 'requests/create.html'
     success_url = '/requestions/'

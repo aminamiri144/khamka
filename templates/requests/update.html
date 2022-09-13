@@ -1,3 +1,4 @@
+{% load static %}
 <div class="row">
     <div class="col-md-12">
         <form action="{{ request.path }}"
@@ -21,3 +22,6 @@
         </form>
     </div>
 </div>
+<script src="{% static 'customers/js/jquery.min.js' %}"></script>
+<script src="{% static 'customers/plugins/jalaliDatepicker/kamadatepicker.min.js'%}"></script>
+<script>kamaDatepicker('id_register_date', {buttonsColor: "green", forceFarsiDigits: true});</script>

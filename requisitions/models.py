@@ -1,6 +1,6 @@
 from django.db import models
 from customers.models import Customer
-import jdatetime
+from jdatetime import datetime as jd
 import random
 # Create your models here.
 
@@ -62,13 +62,13 @@ class Request(models.Model):
     )
 
     number = models.CharField(verbose_name='شماره درخواست',
-                              default=generate_request_id(), max_length=7)
+                              default=generate_request_id(), max_length=5)
     title = models.CharField(
         max_length=150, verbose_name='عنوان درخواست', blank=False, null=False)
     register_date = models.DateField(
         verbose_name='تاریخ ایجاد درخواست', blank=False, null=False)
     customer = models.ForeignKey(
-        Customer, on_delete=models.PROTECT, blank=True, null=True, verbose_name='درخواست دهنده')
+        Customer, on_delete=models.PROTECT, blank=False, null=False, verbose_name='درخواست دهنده')
     description = models.TextField(verbose_name='توضیحات')
     status = models.CharField(choices=REQUEST_STATUS, verbose_name='وضعیت',
                               default='1', blank=False, null=False, max_length=20)
@@ -91,6 +91,16 @@ class Request(models.Model):
     @property
     def status_d(self):
         return self.get_status_display()
+
+
+    def jd_register_date(self):
+        try:
+            return jd.fromgregorian(
+                date=self.register_date,
+            ).strftime('%Y/%m/%d')
+        except:
+            return 'ثبت نشده!'
+
 
     def __str__(self):
         return str(self.number)
