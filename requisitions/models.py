@@ -1,4 +1,5 @@
 from django.db import models
+from django_jalali.db import models as jmodels
 from customers.models import Customer
 from jdatetime import datetime as jd
 import random
@@ -60,13 +61,12 @@ class Request(models.Model):
         ('2', 'اپراتور خانه ملت'),
         ('3', 'نامشخص'),
     )
-
+    objects = jmodels.jManager()
     number = models.CharField(verbose_name='شماره درخواست',
                               default=generate_request_id(), max_length=5)
     title = models.CharField(
         max_length=150, verbose_name='عنوان درخواست', blank=False, null=False)
-    register_date = models.DateField(
-        verbose_name='تاریخ ایجاد درخواست', blank=False, null=False)
+    register_date = jmodels.jDateField(verbose_name='تاریخ ایجاد درخواست', blank=False, null=False)
     customer = models.ForeignKey(
         Customer, on_delete=models.PROTECT, blank=False, null=False, verbose_name='درخواست دهنده')
     description = models.TextField(verbose_name='توضیحات')

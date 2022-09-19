@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load static %}
+{% load jformat %}
 {% block content %}
     {% include 'base/navigator.html' %}
     {% include 'base/aside.html' %}
@@ -104,7 +105,7 @@
                                                             {% endif %}
                                                         </td>
                                                         <td>{{ request.get_result_display }}</td>
-                                                        <td>{{ request.jd_register_date }}</td>
+                                                        <td>{{ request.register_date|jformat:"%Y/%m/%d" }}</td>
                                                         <td>
                                                             <button type="button"
                                                                     class="btn btn-warning btn-sm"
