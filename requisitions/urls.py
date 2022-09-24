@@ -4,7 +4,7 @@ from requisitions.views import RequestListView, RequestCreateView, RequestDetail
 
 urlpatterns = [
     path('', RequestListView.as_view(), name='request-list'),
-    path('create/', RequestCreateView.as_view(), name='request-create'),
+    path('create/<int:customer>', RequestCreateView.as_view(), name='request-create'),
     path('update/<str:pk>/', RequestUpdateView.as_view(), name='request-update'),
     path('detail/<str:pk>/', RequestDetailView.as_view(), name='request-detail'),
 ]

@@ -1,11 +1,11 @@
 from django import forms
+import customers
 from requisitions.models import Request
 from django.core.exceptions import ValidationError
 from khamka.datetimeUtils import change_date_to_english
 from django_jalali.forms import jDateField, jDateInput
 from khamka.settings import DATE_INPUT_FORMATS
 class RequestsForm(forms.ModelForm):
-    
     register_date = forms.CharField(label='تاریخ درخواست:')
     class Meta:
         model = Request
@@ -15,6 +15,7 @@ class RequestsForm(forms.ModelForm):
         super(RequestsForm, self).__init__(*args, **kwargs)
         for visible in self.visible_fields():
             visible.field.widget.attrs['class'] = 'form-control'
+        self.fields['customer'].disabled = True
     
     def clean_number(self):
         number = self.cleaned_data['number']

@@ -16,7 +16,7 @@
                                 <div class="card-body">
                                     <div class="col-md-6">
                                         <form class="needs-validation"
-                                              action="{% url 'request-create' %}"
+                                              action="{% url 'request-create' customer_id %}"
                                               method="post"
                                               autocomplete="off"
                                               id="customer-form"
@@ -51,6 +51,14 @@
 {% block moreScript %}
     <script>
     kamaDatepicker('id_register_date', {buttonsColor: "green", forceFarsiDigits: true});
+
+    $('#id_customer').select2({
+        ajax: {
+          url: 'https://api.github.com/search/repositories',
+          dataType: 'json'
+        }
+      });   
+
 
     // Example starter JavaScript for disabling form submissions if there are invalid fields
     (function() {

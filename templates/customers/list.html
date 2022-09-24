@@ -60,11 +60,11 @@
                                                 </div>
                                             </form>
                                         </div>
-                                        <div class="col ml-auto">
+                                        {% comment %} <div class="col ml-auto">
                                             <a href="{% url 'customer-create' %}"
                                                class="btn btn-success float-right ml-3"
                                                type="button">اضافه کردن +</a>
-                                        </div>
+                                        </div> {% endcomment %}
                                     </div>
                                     {% if customers %}
                                         <div class="table-responsive">
@@ -99,6 +99,9 @@
                                                                         data-target="#update_modal">
                                                                     ویرایش
                                                                 </button>
+                                                                <a href="{% url 'request-create' customer.id %}" class="btn btn-info btn-sm">
+                                                                    ثبت درخواست
+                                                                </a>
                                                             </td>
                                                         </tr>
                                                     {% endfor %}
@@ -157,7 +160,6 @@
     {% include 'base/updateModal.html' %}
 {% endblock content %}
 {% block moreScript %}
-    {% comment %} <script src="{% static 'customers/js/datatablescripts.js'%}"></script> {% endcomment %}
     <script>
 function update_user(id) {
     $.ajax({

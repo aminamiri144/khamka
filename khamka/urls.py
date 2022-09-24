@@ -21,9 +21,6 @@ from django.conf.urls.static import static
 from khamka.views import *
 
 
-
-
-
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('requestions/', include('requisitions.urls')),
@@ -32,6 +29,7 @@ urlpatterns = [
     path('panel/', index, name="panel"),
     path('accounts/login/', login),
     path('register/', registerrequest),
+
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
