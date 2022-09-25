@@ -36,22 +36,27 @@ class RequestCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
     success_url = '/requestions/'
     form_class = RequestsForm
     success_message = "درخواست جدید با موفقیت افزوده شد !"
-
-    def form_valid(self, form):
-        form.instance.customer = Customer.objects.get(pk=self.kwargs['customer'])
-        context = {'customer':self.kwargs['customer']}
-        return super(RequestCreateView, self).form_valid(form)
+    # این بخش که کامنت شده برای تغییر داده های فرم بعد از سابمیت به کار میره که فعلا کاریش نداریم 
+    # def form_valid(self, form): 
+    #     form.instance.customer = Customer.objects.get(pk=self.kwargs['customer'])
+    #     return super(RequestCreateView, self).form_valid(form)
     
     def get_context_data(self, **kwargs):
+        """در اینجا فیلد کاستومر یا درخواست دهنده را طوری تنظیم میکنیم که 
+        فقط درخواست دهنده ای که میخواهیم براش درخواست ثبت کنیم نمایش داده بشه
+        و طوره نباشه که همه درخواست دهنده ها در اپشن های فیلد سلکت نمایش داده بشن
+        """
         context = super(RequestCreateView, self).get_context_data(**kwargs)
+        context['form'].fields['customer'].choices.field.queryset = Customer.objects.filter(pk=self.kwargs['customer'])
         context['customer_id'] = self.kwargs['customer']
         return context
     
     def get_initial(self):
-      customer = self.kwargs['customer']
-      return {
-        'customer': customer,
-      }
+        """
+        در اینجا مقدار فیلد درخواست دهنده را با توجه به ادرس مقدار دهی میکنیم 
+        """
+        customer = self.kwargs['customer']
+        return {'customer': customer}
 
 
 class RequestUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
