@@ -52,27 +52,53 @@
                                                                        class="form-control ml-2"
                                                                        id="search"
                                                                        name="q"
-                                                                       placeholder="مقدار مورد نظر را وارد کنید "/>
+                                                                       placeholder="مقدار مورد نظر را وارد کنید "
+                                                                       value="{{ request.GET.q }}"/>
                                                                 <label for="searchOption" class="ml-2">جستجو براساس :</label>
                                                                 <select class="form-control my-1 mr-sm-2 ml-2"
                                                                         id="searchOption"
                                                                         name="option">
-                                                                    <option value="number">
+                                                                    <option value="number" {% if request.GET.option == "number" %}selected{% endif %}>
                                                                         شماره درخواست
                                                                     </option>
-                                                                    <option value="title">
+                                                                    <option value="title" {% if request.GET.option == "title" %}selected{% endif %}>
                                                                         عنوان درخواست
                                                                     </option>
-                                                                    <option value="customer__fullname">
+                                                                    <option value="customer__fullname" {% if request.GET.option == "customer__fullname" %}selected{% endif %}>
                                                                         نام خانوادگی درخواست دهنده
                                                                     </option>
-                                                                    <option value="status">
-                                                                        وضعیت درخواست
+                                                                </select>
+                                                                <label for="searchOption" class="ml-2">وضعیت درخواست : </label>
+                                                                <select class="form-control my-1 mr-sm-2 ml-2"
+                                                                        id="searchOption"
+                                                                        name="status">
+                                                                    <option value="0">
+                                                                        همه
+                                                                    </option>
+                                                                    <option value="1">
+                                                                        ایجاد شده
+                                                                    </option>
+                                                                    <option value="2">
+                                                                        پیگیری در خانه ملت
+                                                                    </option>
+                                                                    <option value="3">
+                                                                        صدورنامه از خانه ملت
+                                                                    </option>
+                                                                    <option value="4">
+                                                                        ارسال نامه به ارگان مربوطه
+                                                                    </option>
+                                                                    <option value="5">
+                                                                        در انتظار درخواست دهنده
+                                                                    </option>
+                                                                    <option value="6">
+                                                                        خاتمه یافته
                                                                     </option>
                                                                 </select>
                                                                 <button type="submit" class="btn mb-2 btn-warning">
                                                                     <span class="fe fe-search fe-14 mr-1"></span>جستجو
                                                                 </button>
+
+                                                                <a href="{% url 'request-list' %}" class="btn mb-2 btn-info ml-2">نمایش همه درخواست ها</a>
                                                             </div>
                                                         </div>
                                                     </form>
