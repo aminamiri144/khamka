@@ -55,7 +55,6 @@ class Request(models.Model):
         ('3', 'نامشخص'),
     )
 
-
     CREATED_BY = (
         ('1', 'درخواست دهنده'),
         ('2', 'اپراتور خانه ملت'),
@@ -66,7 +65,8 @@ class Request(models.Model):
                               default=generate_request_id(), max_length=5)
     title = models.CharField(
         max_length=150, verbose_name='عنوان درخواست', blank=False, null=False)
-    register_date = jmodels.jDateField(verbose_name='تاریخ ایجاد درخواست', blank=False, null=False)
+    register_date = jmodels.jDateField(
+        verbose_name='تاریخ ایجاد درخواست', blank=False, null=False)
     customer = models.ForeignKey(
         Customer, on_delete=models.PROTECT, blank=False, null=False, verbose_name='درخواست دهنده')
     description = models.TextField(verbose_name='توضیحات')
@@ -78,12 +78,15 @@ class Request(models.Model):
     category = models.ForeignKey(
         Category, blank=True, null=True, on_delete=models.PROTECT, verbose_name='دسته بندی')
 
-    created_by = models.CharField(verbose_name='ایجاد شده توسط', blank=False, null=False, max_length=20, choices=CREATED_BY, default='3')
+    created_by = models.CharField(verbose_name='ایجاد شده توسط', blank=False,
+                                  null=False, max_length=20, choices=CREATED_BY, default='3')
+    updated_at = jmodels.jDateTimeField(
+        verbose_name='تاریخ آخرین بروزرسانی', auto_now=True, blank=False, null=False)
 
     @property
     def customer_name(self):
         return self.customer.fullname
-    
+
     @property
     def result_d(self):
         return self.get_result_display()
@@ -92,7 +95,6 @@ class Request(models.Model):
     def status_d(self):
         return self.get_status_display()
 
-
     def jd_register_date(self):
         try:
             return jd.fromgregorian(
@@ -100,7 +102,6 @@ class Request(models.Model):
             ).strftime('%Y/%m/%d')
         except:
             return 'ثبت نشده!'
-
 
     def __str__(self):
         return str(self.number)
@@ -123,5 +124,7 @@ class Survey(models.Model):
 
     customer = models.ForeignKey(Customer, on_delete=models.PROTECT)
     request = models.ForeignKey(Request, on_delete=models.PROTECT)
-    date = models.DateTimeField(auto_now_add=True, verbose_name='تاریخ ثبت نظرسنجی')
-    score = models.CharField(choices=SCORES, blank=True, null=True, verbose_name='امتیاز', max_length=20, default='6')
+    date = models.DateTimeField(
+        auto_now_add=True, verbose_name='تاریخ ثبت نظرسنجی')
+    score = models.CharField(choices=SCORES, blank=True, null=True,
+                             verbose_name='امتیاز', max_length=20, default='6')

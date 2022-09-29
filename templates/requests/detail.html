@@ -1,1 +1,174 @@
-{{ object.number }}
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+    {% include 'base/navigator.html' %}
+    {% include 'base/aside.html' %}
+    <main role="main" class="main-content">
+        <div class="container-fluid">
+            <div class="row justify-content-center">
+                <div class="col-12">
+                    <h2 class="mb-2 page-title">درخواست شماره {{ object.number }}</h2>
+                    <p class="card-text">
+                        درخواست دهنده:  {{ object.customer }}
+                        | عنوان درخواست:  {{ object.title }}
+                    </p>
+                    <div class="row my-4">
+                        <!-- Small table -->
+                        <div class="col-md-6">
+                            <div class="card shadow">
+                                <div class="card-body">
+                                    <div class="col-md-12">
+                                        <h3>اطلاعات درخواست</h3>
+                                        <hr/>
+                                        <table class="table">
+                                            <tbody>
+                                                <tr>
+                                                    <td scope="row">درخواست دهنده</td>
+                                                    <th>{{ object.customer }}</th>
+                                                    <th>
+                                                        <a type="button"
+                                                           class="btn btn-info btn-sm"
+                                                           onclick="modal_url('/customers/detail/{{ object.customer.id }}', 'detail');"
+                                                           data-toggle="modal"
+                                                           data-target="#detail_modal">مشاهده اطلاعات</a>
+                                                    </th>
+                                                </tr>
+                                                <tr>
+                                                    <td scope="row">شماره درخواست</td>
+                                                    <th>{{ object.number }}</th>
+                                                    <th></th>
+                                                </tr>
+                                                <tr>
+                                                    <td scope="row">2</td>
+                                                    <th>Jacob</th>
+                                                    <th></th>
+                                                </tr>
+                                                <tr>
+                                                    <td scope="row">2</td>
+                                                    <th>Jacob</th>
+                                                    <th></th>
+                                                </tr>
+                                                <tr>
+                                                    <td scope="row">2</td>
+                                                    <th>Jacob</th>
+                                                    <th></th>
+                                                </tr>
+                                                <tr>
+                                                    <td scope="row">2</td>
+                                                    <th>Jacob</th>
+                                                    <th></th>
+                                                </tr>
+                                                <tr>
+                                                    <td scope="row">2</td>
+                                                    <th>Jacob</th>
+                                                    <th></th>
+                                                </tr>
+                                                <tr>
+                                                    <td scope="row">2</td>
+                                                    <th>Jacob</th>
+                                                    <th></th>
+                                                </tr>
+                                                <tr>
+                                                    <td scope="row">2</td>
+                                                    <th>Jacob</th>
+                                                    <th></th>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    
+                                </div>
+                                
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card shadow">
+                                <div class="card-body">
+                                    <div class="col-md-12">
+                                        <h3>اطلاعات درخواست</h3>
+                                        <hr/>
+                                        <table class="table">
+                                            <tbody>
+                                                <tr>
+                                                    <td scope="row">درخواست دهنده</td>
+                                                    <th>{{ object.customer }}</th>
+                                                    <th>
+                                                        <a type="button"
+                                                           class="btn btn-info btn-sm"
+                                                           onclick="modal_url('/customers/detail/{{ object.customer.id }}', 'detail');"
+                                                           data-toggle="modal"
+                                                           data-target="#detail_modal">مشاهده اطلاعات</a>
+                                                    </th>
+                                                </tr>
+                                                <tr>
+                                                    <td scope="row">شماره درخواست</td>
+                                                    <th>{{ object.number }}</th>
+                                                    <th></th>
+                                                </tr>
+                                                <tr>
+                                                    <td scope="row">2</td>
+                                                    <th>Jacob</th>
+                                                    <th></th>
+                                                </tr>
+                                                <tr>
+                                                    <td scope="row">2</td>
+                                                    <th>Jacob</th>
+                                                    <th></th>
+                                                </tr>
+                                                <tr>
+                                                    <td scope="row">2</td>
+                                                    <th>Jacob</th>
+                                                    <th></th>
+                                                </tr>
+                                                <tr>
+                                                    <td scope="row">2</td>
+                                                    <th>Jacob</th>
+                                                    <th></th>
+                                                </tr>
+                                                <tr>
+                                                    <td scope="row">2</td>
+                                                    <th>Jacob</th>
+                                                    <th></th>
+                                                </tr>
+                                                <tr>
+                                                    <td scope="row">2</td>
+                                                    <th>Jacob</th>
+                                                    <th></th>
+                                                </tr>
+                                                <tr>
+                                                    <td scope="row">2</td>
+                                                    <th>Jacob</th>
+                                                    <th></th>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    
+                                </div>
+                                
+                            </div>
+                        </div>
+                    </div>
+                    <!-- simple table -->
+                </div>
+                <!-- end section -->
+            </div>
+            <!-- .col-12 -->
+        </div>
+        <!-- .row -->
+    </main>
+    {% include 'base/detailModal.html' %}
+{% endblock content %}
+{% block moreScript %}
+    <script>
+        function modal_url(url, type) {
+            $.ajax({
+                url: url,
+                type: 'GET',
+                success: function (data) {
+                    $("#"+ type +"_modal_body").html(data);
+                }
+            })
+        }
+    </script>
+{% endblock moreScript %}

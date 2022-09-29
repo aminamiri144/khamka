@@ -1,5 +1,6 @@
 from django.views.generic.list import ListView
 from django.views.generic.edit import CreateView, UpdateView
+from django.views.generic.detail import DetailView
 from khamka.views import LoginRequiredMixin, SuccessMessageMixin
 from customers.models import Customer
 from customers.forms import CustomerForm
@@ -37,3 +38,8 @@ class CustomerUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
     template_name = 'customers/update.html'
     success_url = '/customers/'
     success_message = "درخواست دهنده مورد نظر با موفقیت ویرایش شد."
+
+
+class CustomerDetailView(LoginRequiredMixin, DetailView):
+    model = Customer
+    template_name = 'customers/detail.html'

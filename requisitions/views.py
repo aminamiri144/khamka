@@ -82,6 +82,22 @@ class RequestUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
     context_object_name = 'requests'
     success_message = "درخواست مورد نظر با موفقیت ویرایش شد!"
 
+    def get_context_data(self, **kwargs):
+        """در اینجا فیلد کاستومر یا درخواست دهنده را طوری تنظیم میکنیم که 
+        فقط درخواست دهنده ای که میخواهیم براش درخواست ثبت کنیم نمایش داده بشه
+        و طوره نباشه که همه درخواست دهنده ها در اپشن های فیلد سلکت نمایش داده بشن
+        """
+        context = super(RequestUpdateView, self).get_context_data(**kwargs)
+        context['form'].fields['customer'].choices.field.queryset = Customer.objects.filter(pk=self.kwargs['pk'])
+        context['customer_id'] = self.kwargs['pk']
+        return context
+
+    def get_initial(self):
+        """
+        در اینجا مقدار فیلد درخواست دهنده را با توجه به ادرس مقدار دهی میکنیم 
+        """
+        customer = self.kwargs['pk']
+        return {'customer': customer}
 
 class RequestDetailView(LoginRequiredMixin, DetailView):
     model = Request

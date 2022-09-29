@@ -33,18 +33,21 @@ class RequestsForm(forms.ModelForm):
         return register_date
 
 class RequestsUpdateForm(forms.ModelForm):
-    register_date = forms.CharField(label='تاریخ درخواست:')
+    # register_date = forms.CharField(label='تاریخ درخواست:')
 
     class Meta:
         model = Request
         fields = '__all__'
-        exclude = ['number']
+        exclude = ['description', 'register_date']
 
     
     def __init__(self, *args, **kwargs):
         super(RequestsUpdateForm, self).__init__(*args, **kwargs)
         for visible in self.visible_fields():
             visible.field.widget.attrs['class'] = 'form-control'
+        self.fields['title'].disabled = True
+        self.fields['number'].disabled = True
+        self.fields['customer'].disabled = True
 
     def clean_register_date(self):
         register_date = self.cleaned_data['register_date']

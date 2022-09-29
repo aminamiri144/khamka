@@ -58,17 +58,20 @@
                                                                 <select class="form-control my-1 mr-sm-2 ml-2"
                                                                         id="searchOption"
                                                                         name="option">
-                                                                    <option value="number" {% if request.GET.option == "number" %}selected{% endif %}>
+                                                                    <option value="number"
+                                                                            {% if request.GET.option == "number" %}selected{% endif %}>
                                                                         شماره درخواست
                                                                     </option>
-                                                                    <option value="title" {% if request.GET.option == "title" %}selected{% endif %}>
+                                                                    <option value="title"
+                                                                            {% if request.GET.option == "title" %}selected{% endif %}>
                                                                         عنوان درخواست
                                                                     </option>
-                                                                    <option value="customer__fullname" {% if request.GET.option == "customer__fullname" %}selected{% endif %}>
+                                                                    <option value="customer__fullname"
+                                                                            {% if request.GET.option == "customer__fullname" %}selected{% endif %}>
                                                                         نام خانوادگی درخواست دهنده
                                                                     </option>
                                                                 </select>
-                                                                <label for="searchOption" class="ml-2">وضعیت درخواست : </label>
+                                                                <label for="searchOption" class="ml-2">وضعیت درخواست :</label>
                                                                 <select class="form-control my-1 mr-sm-2 ml-2"
                                                                         id="searchOption"
                                                                         name="status">
@@ -97,16 +100,13 @@
                                                                 <button type="submit" class="btn mb-2 btn-warning">
                                                                     <span class="fe fe-search fe-14 mr-1"></span>جستجو
                                                                 </button>
-
                                                                 <a href="{% url 'request-list' %}" class="btn mb-2 btn-info ml-2">نمایش همه درخواست ها</a>
                                                             </div>
                                                         </div>
                                                     </form>
                                                 </div>
                                                 {% comment %} <div class="col ml-auto">
-                                                    <a href="{% url 'request-create' %}"
-                                                       class="btn btn-success float-right ml-3"
-                                                       type="button">اضافه کردن +</a>
+                                                    <a href="{% url 'request-create' %}" class="btn btn-success float-right ml-3" type="button">اضافه کردن +</a>
                                                 </div> {% endcomment %}
                                             </div>
                                         </div>
@@ -138,23 +138,87 @@
                                                             <td>{{ request.customer_name }}</td>
                                                             <td>
                                                                 {% if request.status == '1' %}
-                                                                    <span class="btn-sm btn-primary">ایجاد شده</span>
+                                                                    {% comment %} <span class="btn-sm btn-primary">ایجاد شده</span> {% endcomment %}
+                                                                    <span class="small text-muted">به تازگی ثبت شده</span>
+                                                                    <div class="progress mt-2" style="height: 3px;">
+                                                                        <div class="progress-bar bg-primary"
+                                                                             role="progressbar"
+                                                                             style="width: 10%"
+                                                                             aria-valuenow="10"
+                                                                             aria-valuemin="0"
+                                                                             aria-valuemax="100">
+                                                                        </div>
+                                                                    </div>
                                                                 {% elif request.status == '2' %}
-                                                                    <span class="btn-sm btn-warning">درحال پیگیری در خانه ملت</span>
+                                                                    {% comment %} <span class="btn-sm btn-warning">درحال پیگیری در خانه ملت</span> {% endcomment %}
+                                                                    <span class="small text-muted">درحال پیگیری در خانه ملت</span>
+                                                                    <div class="progress mt-2" style="height: 3px;">
+                                                                        <div class="progress-bar bg-warning"
+                                                                             role="progressbar"
+                                                                             style="width: 30%"
+                                                                             aria-valuenow="30"
+                                                                             aria-valuemin="0"
+                                                                             aria-valuemax="100">
+                                                                        </div>
+                                                                    </div>
                                                                 {% elif request.status == '3' %}
-                                                                    <span class="btn-sm btn-info">صدور نامه از طرف خانه ملت</span>
+                                                                    {% comment %} <span class="btn-sm btn-info">صدور نامه از طرف خانه ملت</span> {% endcomment %}
+                                                                    <span class="small text-muted">صدور نامه از خانه ملت</span>
+                                                                    <div class="progress mt-2" style="height: 3px;">
+                                                                        <div class="progress-bar bg-info"
+                                                                             role="progressbar"
+                                                                             style="width: 50%"
+                                                                             aria-valuenow="50"
+                                                                             aria-valuemin="0"
+                                                                             aria-valuemax="100">
+                                                                        </div>
+                                                                    </div>
                                                                 {% elif request.status == '4' %}
-                                                                    <span class="btn-sm btn-success">ارسال نامه به ارگان مربوطه</span>
+                                                                    {% comment %} <span class="btn-sm btn-success">ارسال نامه به ارگان مربوطه</span> {% endcomment %}
+                                                                    <span class="small text-muted">ارسال نامه به ارگان مربوطه</span>
+                                                                    <div class="progress mt-2" style="height: 3px;">
+                                                                        <div class="progress-bar bg-success"
+                                                                             role="progressbar"
+                                                                             style="width: 70%"
+                                                                             aria-valuenow="70"
+                                                                             aria-valuemin="0"
+                                                                             aria-valuemax="100">
+                                                                        </div>
+                                                                    </div>
                                                                 {% elif request.status == '5' %}
-                                                                    <span class="btn-warning btn-sm">در انتظار درخواست دهنده</span>
+                                                                    {% comment %} <span class="btn-warning btn-sm">در انتظار درخواست دهنده</span> {% endcomment %}
+                                                                    <span class="small text-muted">در انتظار مراجعه درخواست دهنده</span>
+                                                                    <div class="progress mt-2" style="height: 3px;">
+                                                                        <div class="progress-bar bg-info"
+                                                                             role="progressbar"
+                                                                             style="width: 90%"
+                                                                             aria-valuenow="90"
+                                                                             aria-valuemin="0"
+                                                                             aria-valuemax="100">
+                                                                        </div>
+                                                                    </div>
                                                                 {% elif request.status == '6' %}
-                                                                    <span class="btn-sm btn-success">خاتمه یافته</span>
+                                                                    {% comment %} <span class="btn-sm btn-success">خاتمه یافته</span> {% endcomment %}
+                                                                    <span class="small text-muted">خاتمه یافته</span>
+                                                                    <div class="progress mt-2" style="height: 3px;">
+                                                                        <div class="progress-bar bg-success"
+                                                                             role="progressbar"
+                                                                             style="width: 100%"
+                                                                             aria-valuenow="100"
+                                                                             aria-valuemin="0"
+                                                                             aria-valuemax="100">
+                                                                        </div>
+                                                                    </div>
                                                                 {% else %}
                                                                     نامشخص
                                                                 {% endif %}
                                                             </td>
-                                                            <td>{{ request.get_result_display }}</td>
-                                                            <td>{{ request.register_date|jformat:"%Y/%m/%d" }}</td>
+                                                            <td>
+                                                                {{ request.get_result_display }}
+                                                            </td>
+                                                            <td>
+                                                                {{ request.register_date|jformat:"%Y/%m/%d" }}
+                                                            </td>
                                                             <td>
                                                                 <button type="button"
                                                                         class="btn btn-warning btn-sm"
@@ -163,13 +227,11 @@
                                                                         data-target="#update_modal">
                                                                     ویرایش
                                                                 </button>
-                                                                <button type="button"
-                                                                        class="btn btn-info btn-sm"
-                                                                        onclick="modal_url('/requestions/detail/{{ request.id }}', 'detail');"
-                                                                        data-toggle="modal"
-                                                                        data-target="#detail_modal">
+                                                                {% comment %} <button type="button" class="btn btn-info btn-sm" onclick="modal_url('/requestions/detail/{{ request.id }}', 'detail');" data-toggle="modal" data-target="#detail_modal">
                                                                     مشاهده
-                                                                </button>
+                                                                </button> {% endcomment %}
+                                                                <a href="{% url 'request-detail' request.id %}"
+                                                                   class="btn btn-info btn-sm">مشاهده درخواست</a>
                                                             </td>
                                                         </tr>
                                                     {% endfor %}
