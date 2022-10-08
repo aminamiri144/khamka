@@ -14,12 +14,12 @@
                     </p>
                     <div class="row my-4">
                         <!-- Small table -->
-                        <div class="col-md-6">
+                        <div class="col-xl-6">
                             <div class="card shadow">
                                 <div class="card-body">
                                     <div class="col-md-12">
-                                        <h3>اطلاعات درخواست</h3>
-                                        <hr/>
+                                        <h4>اطلاعات درخواست</h4>
+                                        
                                         <table class="table">
                                             <tbody>
                                                 <tr>
@@ -39,113 +39,56 @@
                                                     <th></th>
                                                 </tr>
                                                 <tr>
-                                                    <td scope="row">2</td>
-                                                    <th>Jacob</th>
+                                                    <td scope="row">عنوان درخواست</td>
+                                                    <th>{{ object.title }}</th>
                                                     <th></th>
                                                 </tr>
                                                 <tr>
-                                                    <td scope="row">2</td>
-                                                    <th>Jacob</th>
+                                                    <td scope="row">متن درخواست</td>
+                                                    <th>{{ object.description|truncatechars:'50' }}</th>
+                                                    <th>
+                                                        <a type="button"
+                                                           class="btn btn-info btn-sm"
+                                                           data-toggle="modal"
+                                                           data-target="#description_modal">مشاهده متن کامل</a>
+                                                    </th>
+                                                </tr>
+                                                <tr>
+                                                    <td scope="row">تاریخ ثبت درخواست</td>
+                                                    <th>{{ object.jd_register_date }}</th>
                                                     <th></th>
                                                 </tr>
                                                 <tr>
-                                                    <td scope="row">2</td>
-                                                    <th>Jacob</th>
+                                                    <td scope="row">وضعیت درخواست</td>
+                                                    <th>{{ object.get_status_display }}</th>
                                                     <th></th>
                                                 </tr>
                                                 <tr>
-                                                    <td scope="row">2</td>
-                                                    <th>Jacob</th>
+                                                    <td scope="row">نتیجه</td>
+                                                    <th>{{ object.get_result_display }}</th>
                                                     <th></th>
                                                 </tr>
                                                 <tr>
-                                                    <td scope="row">2</td>
-                                                    <th>Jacob</th>
-                                                    <th></th>
-                                                </tr>
-                                                <tr>
-                                                    <td scope="row">2</td>
-                                                    <th>Jacob</th>
-                                                    <th></th>
-                                                </tr>
-                                                <tr>
-                                                    <td scope="row">2</td>
-                                                    <th>Jacob</th>
+                                                    <td scope="row">دسته بندی</td>
+                                                    <th>{{ object.category }}</th>
                                                     <th></th>
                                                 </tr>
                                             </tbody>
                                         </table>
                                     </div>
-                                    
                                 </div>
-                                
                             </div>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-xl-6">
                             <div class="card shadow">
                                 <div class="card-body">
                                     <div class="col-md-12">
-                                        <h3>اطلاعات درخواست</h3>
+                                        <h4>
+                                            اطلاعات درخواست
+                                        </h4>
                                         <hr/>
-                                        <table class="table">
-                                            <tbody>
-                                                <tr>
-                                                    <td scope="row">درخواست دهنده</td>
-                                                    <th>{{ object.customer }}</th>
-                                                    <th>
-                                                        <a type="button"
-                                                           class="btn btn-info btn-sm"
-                                                           onclick="modal_url('/customers/detail/{{ object.customer.id }}', 'detail');"
-                                                           data-toggle="modal"
-                                                           data-target="#detail_modal">مشاهده اطلاعات</a>
-                                                    </th>
-                                                </tr>
-                                                <tr>
-                                                    <td scope="row">شماره درخواست</td>
-                                                    <th>{{ object.number }}</th>
-                                                    <th></th>
-                                                </tr>
-                                                <tr>
-                                                    <td scope="row">2</td>
-                                                    <th>Jacob</th>
-                                                    <th></th>
-                                                </tr>
-                                                <tr>
-                                                    <td scope="row">2</td>
-                                                    <th>Jacob</th>
-                                                    <th></th>
-                                                </tr>
-                                                <tr>
-                                                    <td scope="row">2</td>
-                                                    <th>Jacob</th>
-                                                    <th></th>
-                                                </tr>
-                                                <tr>
-                                                    <td scope="row">2</td>
-                                                    <th>Jacob</th>
-                                                    <th></th>
-                                                </tr>
-                                                <tr>
-                                                    <td scope="row">2</td>
-                                                    <th>Jacob</th>
-                                                    <th></th>
-                                                </tr>
-                                                <tr>
-                                                    <td scope="row">2</td>
-                                                    <th>Jacob</th>
-                                                    <th></th>
-                                                </tr>
-                                                <tr>
-                                                    <td scope="row">2</td>
-                                                    <th>Jacob</th>
-                                                    <th></th>
-                                                </tr>
-                                            </tbody>
-                                        </table>
                                     </div>
-                                    
                                 </div>
-                                
                             </div>
                         </div>
                     </div>
@@ -157,6 +100,34 @@
         </div>
         <!-- .row -->
     </main>
+    <div class="modal fade"
+         id="description_modal"
+         data-backdrop="static"
+         tabindex="-1"
+         role="dialog"
+         aria-labelledby="staticBackdrop"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        متن کامل درخواست
+                    </h5>
+                    <button type="button"
+                            class="btn btn-danger btn-sm"
+                            data-dismiss="modal"
+                            data-dismiss="modal">
+                        <span class="fe fe-14 fe-x"></span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    {{ object.description }}
+                </div>
+                <div class="modal-footer">
+                </div>
+            </div>
+        </div>
+    </div>
     {% include 'base/detailModal.html' %}
 {% endblock content %}
 {% block moreScript %}

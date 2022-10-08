@@ -96,10 +96,9 @@ class Request(models.Model):
         return self.get_status_display()
 
     def jd_register_date(self):
+        jd_reg_date = str(self.register_date).replace('-','/')
         try:
-            return jd.fromgregorian(
-                date=self.register_date,
-            ).strftime('%Y/%m/%d')
+            return jd_reg_date
         except:
             return 'ثبت نشده!'
 
