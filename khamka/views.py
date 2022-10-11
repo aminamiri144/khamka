@@ -1,16 +1,17 @@
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.shortcuts import render
-
-
+from django.contrib.auth.views import LoginView
+from django.views.generic import TemplateView
+from django.views import View
+from django.contrib.auth import logout
+from django.shortcuts import redirect
 class LoginRequiredMixin(object):
     """
     این کلاس در بررسی لاگین بودن یا نبودن
     کاربر کاربرد دارد.
     """
-
     login_required = True
-
     @classmethod
     def as_view(cls, **kwargs):
         self = cls()
@@ -41,15 +42,58 @@ class SuccessMessageMixin:
 
 
 
+class UserLoginView(LoginView):
+    """
+    برای لاگین شدن کاربر استفاده میشود و
+    از LoginView خود جانگو و فرم آن استفاده میکند
 
-def index(request):
-    context = {}
-    return render(request, 'panel.html', context=context)
+    """
+    template_name = 'login.html'
+    success_url = '/panel'
 
-def login(request):
-    context = {}
-    return render(request, 'login.html', context=context)
+    def get_redirect_url(self):
+        return '/panel'
+
+    # def form_valid(self, form):
+    #     """
+    #     برای لاگ کردن ورود کاربر استفاده میشود
+
+    #     Arguments:
+    #         form:
+    #             فرم ارسال شده است
+    #     """
+    #     res = super().form_valid(form)
+    #     return res
+
+
+
+
+
+class PanelView(TemplateView, LoginRequiredMixin):
+    template_name = "panel.html"
+
 
 def registerrequest(request):
     context = {}
     return render(request, 'rere.html', context=context)
+
+
+class UserLogoutView(LoginRequiredMixin, View):
+    """
+    برای خروج کاربر یا اصطلاحاً لاگ آوت استفاده میشود
+    و پس از لاگ اوت کاربر را به صفحه لاگین هدایت میکند
+
+    Arguments:
+        request:
+           درخواست ارسال شده به صفحه است
+
+    """
+
+    def get(self, request):
+        # request.user.last_logout = timezone.now()
+        # request.user.last_activity = timezone.now()
+        # request.user.save()
+        # log_save(request.user, 1, 2, True)
+        logout(request)
+
+        return redirect('/accounts/login')
