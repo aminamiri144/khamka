@@ -26,7 +26,7 @@ class Category(models.Model):
         blank=True, null=True, verbose_name='توضیحات')
 
     def __str__(self):
-        return f'{self.subject}  ({self.get_category_type_display()})'
+        return f'{self.subject}'
 
 
 def generate_request_id():
@@ -103,9 +103,9 @@ class Request(models.Model):
             return 'ثبت نشده!'
 
     def __str__(self):
-        return str(self.number)
+        return f"{self.number} , {self.title}"
 
-
+    
 class Survey(models.Model):
 
     SCORES = (
