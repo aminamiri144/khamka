@@ -69,7 +69,7 @@ class Letter(models.Model):
     image = ResizedImageField(upload_to='lettersImage/', verbose_name='تصویر نامه', blank=True, null=True, quality=50)
     recepiant = models.ForeignKey(Organ, blank=True, null=True, verbose_name='گیرنده نامه', default='5', on_delete=models.SET_NULL)
     status = models.CharField(choices=LETTER_STATUS, blank=False, null=False, verbose_name='وضعیت نامه', max_length=30)
-    status = models.CharField(choices=LETTER_TYPE, blank=False, null=False, verbose_name='نوع نامه', max_length=30)
+    letter_type = models.CharField(choices=LETTER_TYPE, blank=False, null=False, verbose_name='نوع نامه', max_length=30)
     category = models.ForeignKey(LetterCategory, on_delete=models.PROTECT, verbose_name='دسته بندی', null=True, blank=True)
     
     def __str__(self):

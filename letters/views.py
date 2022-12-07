@@ -1,10 +1,10 @@
 from django.shortcuts import render
-from letters.models import Letter
+from letters.models import Letter, Organ
 from django.views.generic.list import ListView
 from django.views.generic.edit import CreateView, UpdateView
 from django.views.generic.detail import DetailView
 from khamka.views import LoginRequiredMixin, SuccessMessageMixin
-from letters.forms import LetterForm
+from letters.forms import LetterForm, OrganForm
 from requisitions.models import Request
 
 
@@ -33,3 +33,17 @@ class LetterCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
         """
         customer = self.kwargs['requestid']
         return {'request': customer}
+
+
+
+
+class OrganCreateView(CreateView, LoginRequiredMixin, SuccessMessageMixin):
+    model = Organ
+    template_name = 'organ/create.html'
+    #success_url = '/letters/'
+    form_class = OrganForm
+    success_message = 'سازمان جدید با موفقیت افزوده شد !'
+
+    def get_success_url(self):
+        p = self.kwargs['craete_letter_id']
+        return f'/letter/create/{p}'

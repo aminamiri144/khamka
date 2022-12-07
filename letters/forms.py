@@ -1,7 +1,7 @@
 from io import StringIO
 from PIL import Image
 from django import forms
-from letters.models import Letter
+from letters.models import Letter, Organ
 from django.core.exceptions import ValidationError
 from khamka.datetimeUtils import change_date_to_english
 
@@ -11,7 +11,18 @@ class LetterForm(forms.ModelForm):
 
     class Meta:
         model = Letter
-        fields = '__all__'
+        fields = [
+            'recepiant',
+            'letter_number',
+            'title',
+            'request',
+            'register_date',
+            'descrption',
+            'image',
+            'status',
+            'letter_type',
+            'category'
+        ]
 
     def __init__(self, *args, **kwargs):
         super(LetterForm, self).__init__(*args, **kwargs)
@@ -38,3 +49,14 @@ class LetterForm(forms.ModelForm):
     #     image.save(image_file, 'JPEG', quality=70)
     #     image_field.file = image_file
     #     return image_field
+
+
+class OrganForm(forms.ModelForm):
+    class Meta:
+        model = Organ
+        fields= '__all__'
+    
+    def __init__(self, *args, **kwargs):
+        super(OrganForm, self).__init__(*args, **kwargs)
+        for visible in self.visible_fields():
+            visible.field.widget.attrs['class'] = 'form-control'
