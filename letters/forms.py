@@ -66,6 +66,43 @@ class LetterForm(forms.ModelForm):
     #     image_field.file = image_file
     #     return image_field
 
+class LetterUpdateForm(LetterForm):
+    register_date = forms.CharField(label='تاریخ درخواست:')
+
+    class Meta:
+        model = Letter
+        fields = [
+            'recepiant',
+            'letter_number',
+            'title',
+            'request',
+            'register_date',
+            'descrption',
+            'image',
+            'status',
+            'letter_type',
+            'category'
+        ]
+        widgets = { 
+            'recepiant': OrganWidget,
+            'request': RequestWidget,
+        }
+
+    def __init__(self, *args, **kwargs):
+        super(LetterForm, self).__init__(*args, **kwargs)
+        for visible in self.visible_fields():
+            visible.field.widget.attrs['class'] = 'form-control'
+        # self.fields['request'].disabled = True
+
+   
+    def clean_register_date(self):
+        register_date = self.cleaned_data['register_date']
+        try:
+            register_date = change_date_to_english(register_date, 2)
+        except:
+            register_date = None
+        return register_date
+
 
 class OrganForm(forms.ModelForm):
     class Meta:

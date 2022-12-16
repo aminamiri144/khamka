@@ -1,11 +1,12 @@
 from django.urls import path
-from letters.views import LetterCreateView, OrganCreateView, LetterListView, LetterDetailView,LetterScreateView
+from letters.views import LetterCreateView, OrganCreateView, LetterListView, LetterDetailView, LetterUpdateView
 
 
 urlpatterns = [
         path('', LetterListView.as_view(), name='letter-list'),
-        path('create/<int:requestid>', LetterCreateView.as_view(), name='letter-create'),
-        path('rcreate/', LetterScreateView.as_view(), name='letter-rcreate'),
+        # path('rcreate/<int:requestid>', LetterRCreateView.as_view(), name='letter-rcreate'),
+        path('update/<int:pk>', LetterUpdateView.as_view(), name='letter-update'),
+        path('create/', LetterCreateView.as_view(), name='letter-create'),
         path('detail/<int:pk>', LetterDetailView.as_view(), name='letter-detail'),
         path('organ/create/<int:craete_letter_id>', OrganCreateView.as_view(), name='organ-create'),
 ]

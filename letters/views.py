@@ -4,41 +4,35 @@ from django.views.generic.list import ListView
 from django.views.generic.edit import CreateView, UpdateView
 from django.views.generic.detail import DetailView
 from khamka.views import LoginRequiredMixin, SuccessMessageMixin
-from letters.forms import LetterForm, OrganForm
-from requisitions.models import Request
+from letters.forms import LetterForm, OrganForm, LetterUpdateForm
+from django.urls import reverse
+
+
+# class LetterRCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
+#     model = Letter
+#     template_name = 'letters/create.html'
+#     form_class = LetterForm
+#     success_message = 'نامه جدید با موفقیت افزوده شد !'
+    
+#     def get_initial(self):
+#         """
+#         در اینجا مقدار فیلد درخواست دهنده را با توجه به ادرس مقدار دهی میکنیم 
+#         """
+#         customer = self.kwargs['requestid']
+#         return {'request': customer}
+    
+#     def get_success_url(self):
+#         return reverse('letter-detail', kwargs={'pk': self.object.pk,})
 
 
 class LetterCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
     model = Letter
     template_name = 'letters/create.html'
-    success_url = '/letters/'
     form_class = LetterForm
     success_message = 'نامه جدید با موفقیت افزوده شد !'
 
-    # def get_context_data(self, **kwargs):
-    #     """در اینجا فیلد کاستومر یا درخواست دهنده را طوری تنظیم میکنیم که 
-    #     فقط درخواست دهنده ای که میخواهیم براش درخواست ثبت کنیم نمایش داده بشه
-    #     و طوره نباشه که همه درخواست دهنده ها در اپشن های فیلد سلکت نمایش داده بشن
-    #     """
-    #     context = super(LetterCreateView, self).get_context_data(**kwargs)
-    #     context['form'].fields['request'].choices.field.queryset = Request.objects.filter(pk=self.kwargs['requestid'])
-    #     context['request_id'] = self.kwargs['requestid']
-    #     return context
-    
-    def get_initial(self):
-        """
-        در اینجا مقدار فیلد درخواست دهنده را با توجه به ادرس مقدار دهی میکنیم 
-        """
-        customer = self.kwargs['requestid']
-        return {'request': customer}
-
-
-class LetterScreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
-    model = Letter
-    template_name = 'letters/create.html'
-    success_url = '/letters/'
-    form_class = LetterForm
-    success_message = 'نامه جدید با موفقیت افزوده شد !'
+    def get_success_url(self):
+        return reverse('letter-detail', kwargs={'pk': self.object.pk,})
 
 
 class OrganCreateView(CreateView, LoginRequiredMixin, SuccessMessageMixin):
@@ -94,3 +88,23 @@ class LetterListView(LoginRequiredMixin, ListView):
 class LetterDetailView(DetailView, LoginRequiredMixin):
     model = Letter
     template_name = 'letters/detail.html'
+
+
+
+class LetterUpdateView(UpdateView, LoginRequiredMixin, SuccessMessageMixin):
+    model = Letter
+    form_class = LetterUpdateForm
+    template_name = 'letters/update.html'
+    success_url = '/letters/'
+    context_object_name = 'letters'
+    success_message = "نامه با موفقیت ویرایش شد!"
+
+    def get_success_url(self):
+        return reverse('letter-detail', kwargs={'pk': self.object.pk,})
+
+    def get_initial(self):
+        """
+        در اینجا مقدار فیلد درخواست دهنده را با توجه به ادرس مقدار دهی میکنیم 
+        """
+        regdate = Letter.objects.get(pk=self.kwargs['pk']).jd_register_date
+        return {'register_date': regdate}

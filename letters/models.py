@@ -73,6 +73,7 @@ class Letter(models.Model):
     letter_type = models.CharField(choices=LETTER_TYPE, blank=False, null=False, verbose_name='نوع نامه', max_length=30)
     category = models.ForeignKey(LetterCategory, on_delete=models.PROTECT, verbose_name='دسته بندی', null=True, blank=True)
     
+    @property
     def jd_register_date(self):
         jd_reg_date = str(self.register_date).replace('-','/')
         try:
