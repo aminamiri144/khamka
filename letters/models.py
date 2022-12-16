@@ -53,6 +53,7 @@ class Letter(models.Model):
         ('2', 'ارسال به دبیرخانه'),
         ('3', 'ارسال شده'),
         ('4', 'درحال بررسی'),
+        ('5', 'خاتمه یافته'),
     )
 
     LETTER_TYPE = (
@@ -63,14 +64,21 @@ class Letter(models.Model):
 
     letter_number = models.CharField(max_length=30, blank=False, null=False, verbose_name='شماره نامه')
     title = models.CharField(max_length=255, blank=False,null=False, verbose_name='موضوع نامه')
-    request = models.ForeignKey(Request, blank=False, null=False, verbose_name='درخواست مرجع', on_delete=models.PROTECT)
+    request = models.ForeignKey(Request, blank=True, null=True, verbose_name='درخواست مرجع', on_delete=models.PROTECT)
     register_date = jmodels.jDateField(verbose_name='تاریخ نامه', blank=False, null=False)
     descrption = models.TextField(verbose_name='توضیحات', blank=True, null=True)
     image = ResizedImageField(upload_to='lettersImage/', verbose_name='تصویر نامه', blank=True, null=True, quality=50)
-    recepiant = models.ForeignKey(Organ, blank=True, null=True, verbose_name='گیرنده نامه', default='5', on_delete=models.SET_NULL)
+    recepiant = models.ForeignKey(Organ, blank=True, null=True, verbose_name='گیرنده یا فرستنده', default='5', on_delete=models.SET_NULL)
     status = models.CharField(choices=LETTER_STATUS, blank=False, null=False, verbose_name='وضعیت نامه', max_length=30)
     letter_type = models.CharField(choices=LETTER_TYPE, blank=False, null=False, verbose_name='نوع نامه', max_length=30)
     category = models.ForeignKey(LetterCategory, on_delete=models.PROTECT, verbose_name='دسته بندی', null=True, blank=True)
     
+    def jd_register_date(self):
+        jd_reg_date = str(self.register_date).replace('-','/')
+        try:
+            return jd_reg_date
+        except:
+            return 'ثبت نشده!'
+
     def __str__(self):
         return f"{self.letter_number} {self.title}"

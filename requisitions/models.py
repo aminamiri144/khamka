@@ -103,7 +103,7 @@ class Request(models.Model):
             return 'ثبت نشده!'
 
     def __str__(self):
-        return f"{self.number} , {self.title}"
+        return f"{self.customer} | {self.number} | {self.title}"
 
     
 class Survey(models.Model):

@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'requisitions.apps.RequisitionsConfig',
     'customers.apps.CustomersConfig',
     'letters.apps.LettersConfig',
+    'django_select2',
 ]
 
 MIDDLEWARE = [
@@ -85,6 +86,33 @@ DATABASES = {
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
+
+
+
+CACHES = {
+    # … default cache config and others
+    "default": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": "redis://:ywhslWjz60RNmpD6pNFc2L56@esme.iran.liara.ir:30887/0",
+    },
+    "select2": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": "redis://:ywhslWjz60RNmpD6pNFc2L56@esme.iran.liara.ir:30887/0",
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+        }
+    }
+}
+
+# Tell select2 which cache configuration to use:
+SELECT2_CACHE_BACKEND = "select2"
+
+
+
+
+
+
+
 
 
 # Password validation

@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load static %}
+{% comment %} {{ form.media.css }} {% endcomment %}
 {% block content %}
     {% include 'base/navigator.html' %}
     {% include 'base/aside.html' %}
@@ -15,7 +16,7 @@
                             <div class="card shadow">
                                 <button type="button"
                                             class="btn btn-info btn-sm"
-                                            onclick="modal_url('/letter/organ/create/{{ request_id }}', 'create');"
+                                            onclick="modal_url('/letters/organ/create/{{ request_id }}', 'create');"
                                             data-toggle="modal"
                                             data-target="#create_modal">
                                         افزودن گیرندگان (سازمان-نهاد)
@@ -24,7 +25,8 @@
                                     
                                     <div class="col-md-6">
                                         <form class="needs-validation"
-                                              action="{% url 'letter-create' request_id %}"
+                                              {% comment %} action="{% url 'letter-create' request_id %}" {% endcomment %}
+                                              action="{% url 'letter-rcreate' %}"
                                               method="post"
                                               autocomplete="off"
                                               id="customer-form"
@@ -70,5 +72,8 @@
             }
         })
     }
+    </script>
+    <script>
+        {{ form.media.js }}
     </script>
 {% endblock moreScript %}

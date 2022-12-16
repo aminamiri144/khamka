@@ -51,51 +51,43 @@
                 </ul>
             </li>
             <li class="nav-item dropdown">
-                <a href="#forms"
-                   data-toggle="collapse"
-                   aria-expanded="false"
-                   class="dropdown-toggle nav-link">
+                <a href="{% url 'request-list' %}"
+                   class="nav-link">
                     <i class="fe fe-credit-card fe-16"></i>
                     <span class="ml-3 item-text">درخواست ها</span>
                 </a>
-                <ul class="collapse list-unstyled pl-4 w-100" id="forms">
+                {% comment %} <ul class="collapse list-unstyled pl-4 w-100" id="forms">
                     <li class="nav-item">
                         <a class="nav-link pl-3" href="{% url 'request-list' %}"><span class="ml-1 item-text">لیست درخواست ها</span></a>
                     </li>
-                    {% comment %} <li class="nav-item">
+                     <li class="nav-item">
                         <a class="nav-link pl-3" href="{% url 'request-create' %}"><span class="ml-1 item-text">ثبت درخواست جدید</span></a>
-                    </li> {% endcomment %}
-                </ul>
+                    </li> 
+                </ul> {% endcomment %}
             </li>
             <li class="nav-item dropdown">
-                <a href="#tables"
-                   data-toggle="collapse"
-                   aria-expanded="false"
-                   class="dropdown-toggle nav-link">
+                <a href="{% url 'letter-list' %}" class="nav-link">
                     <i class="fe fe-grid fe-16"></i>
                     <span class="ml-3 item-text">نامه ها</span>
                 </a>
-                <ul class="collapse list-unstyled pl-4 w-100" id="tables">
+                {% comment %} <ul class="collapse list-unstyled pl-4 w-100" id="tables">
                     <li class="nav-item">
-                        <a class="nav-link pl-3" href="./table_basic.html"><span class="ml-1 item-text">نامه های ارسالی</span></a>
+                        <a class="nav-link pl-3" href="{% url 'letter-list' %}"><span class="ml-1 item-text">نامه های ارسالی</span></a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link pl-3" href="./table_advanced.html"><span class="ml-1 item-text">نامه های دریافتی</span></a>
                     </li>
-                    {% comment %} <li class="nav-item">
+                    <li class="nav-item">
                         <a class="nav-link pl-3" href="{% url 'letter-create' %}"><span class="ml-1 item-text">افزودن نامه جدید</span></a>
-                    </li> {% endcomment %}
-                </ul>
+                    </li>
+                </ul> {% endcomment %}
             </li>
-            <li class="nav-item dropdown">
-                <a href="#charts"
-                   data-toggle="collapse"
-                   aria-expanded="false"
-                   class="dropdown-toggle nav-link">
+            <li class="nav-item">
+                <a href="/panel" class="nav-link">
                     <i class="fe fe-pie-chart fe-16"></i>
                     <span class="ml-3 item-text">گزارش ها</span>
                 </a>
-                <ul class="collapse list-unstyled pl-4 w-100" id="charts">
+                {% comment %} <ul class="collapse list-unstyled pl-4 w-100" id="charts">
                     <li class="nav-item">
                         <a class="nav-link pl-3" href="./chart-inline.html"><span class="ml-1 item-text">Inline Chart</span></a>
                     </li>
@@ -108,7 +100,7 @@
                     <li class="nav-item">
                         <a class="nav-link pl-3" href="./datamaps.html"><span class="ml-1 item-text">Datamaps</span></a>
                     </li>
-                </ul>
+                </ul> {% endcomment %}
             </li>
         </ul>
     </nav>

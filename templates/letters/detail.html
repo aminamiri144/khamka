@@ -1,0 +1,162 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+    {% include 'base/navigator.html' %}
+    {% include 'base/aside.html' %}
+    <main role="main" class="main-content">
+        <div class="container-fluid">
+            <div class="row justify-content-center">
+                <div class="col-12">
+                    <h2 class="mb-2 page-title">نامه شماره {{ object.letter_number }}</h2>
+                    <p class="card-text">
+                        {% if object.letter_type == '1' %}
+                            گیرنده
+                        {% else %}
+                            فرستنده
+                        {% endif %}
+                        :  {{ object.recepiant }}
+                        | عنوان نامه:  {{ object.title }}
+                        | <span class="btn btn-info btn-sm">نامه {{ object.get_letter_type_display }}</span>
+                    </p>
+                    <div class="row my-4">
+                        <!-- Small table -->
+                        <div class="col-xl-6">
+                            <div class="card shadow mb-3">
+                                <div class="card-body">
+                                    <div class="col-md-12">
+                                        <h4>اطلاعات نامه</h4>
+                                        <table class="table">
+                                            <tbody>
+                                                <tr>
+                                                    <td scope="row">
+                                                        {% if object.letter_type == '1' %}
+                                                            گیرنده نامه
+                                                        {% else %}
+                                                            فرستنده نامه
+                                                        {% endif %}
+                                                    </td>
+                                                    <th>{{ object.recepiant }}</th>
+                                                    <th></th>
+                                                </tr>
+                                                {% if object.request %}
+                                                    <tr>
+                                                        <td scope="row">درخواست مرجع نامه</td>
+                                                        <th>{{ object.request }}</th>
+                                                        <th>
+                                                            <a href="{% url 'request-detail' object.request.id %}"
+                                                               class="btn btn-info btn-sm">مشاهده درخواست</a>
+                                                        </th>
+                                                    </tr>
+                                                {% endif %}
+                                                <tr>
+                                                    <td scope="row">شماره نامه</td>
+                                                    <th>{{ object.letter_number }}</th>
+                                                    <th></th>
+                                                </tr>
+                                                <tr>
+                                                    <td scope="row">عنوان نامه</td>
+                                                    <th>{{ object.title }}</th>
+                                                    <th></th>
+                                                </tr>
+                                                <tr>
+                                                    <td scope="row">توضیحات</td>
+                                                    <th>{{ object.description }}</th>
+                                                </tr>
+                                                <tr>
+                                                    <td scope="row">تاریخ ارسال نامه</td>
+                                                    <th>{{ object.jd_register_date }}</th>
+                                                    <th></th>
+                                                </tr>
+                                                <tr>
+                                                    <td scope="row">وضعیت نامه</td>
+                                                    <th>{{ object.get_status_display }}</th>
+                                                    <th></th>
+                                                </tr>
+                                                <tr>
+                                                    <td scope="row">نوع نامه</td>
+                                                    <th>{{ object.get_letter_type_display }}</th>
+                                                    <th></th>
+                                                </tr>
+                                                <tr>
+                                                    <td scope="row">دسته بندی</td>
+                                                    <th>
+                                                        {{ object.category }}
+                                                    </th>
+                                                    <th>
+                                                    </th>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xl-6">
+                            <div class="card shadow">
+                                <div class="card-header">
+                                    <div class="row align-items-center">
+                                        {% if object.image %}
+                                            <img src="/media/{{ object.image }}" class="img-fluid" alt="Responsive image"/>
+                                        {% else %}
+                                        <div>
+                                            <h4>تصویر نامه بارگزاری نشده</h4>
+                                        </div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                {% comment %} <div class="card-body">
+                                </div> {% endcomment %}
+                            </div>
+                        </div>
+                    </div>
+                    <!-- simple table -->
+                </div>
+                <!-- end section -->
+            </div>
+            <!-- .col-12 -->
+        </div>
+        <!-- .row -->
+    </main>
+    <div class="modal fade"
+         id="description_modal"
+         data-backdrop="static"
+         tabindex="-1"
+         role="dialog"
+         aria-labelledby="staticBackdrop"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        متن کامل درخواست
+                    </h5>
+                    <button type="button"
+                            class="btn btn-danger btn-sm"
+                            data-dismiss="modal"
+                            data-dismiss="modal">
+                        <span class="fe fe-14 fe-x"></span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    {{ object.description }}
+                </div>
+                <div class="modal-footer">
+                </div>
+            </div>
+        </div>
+    </div>
+    {% include 'base/detailModal.html' %}
+{% endblock content %}
+{% block moreScript %}
+    <script>
+        function modal_url(url, type) {
+            $.ajax({
+                url: url,
+                type: 'GET',
+                success: function (data) {
+                    $("#"+ type +"_modal_body").html(data);
+                }
+            })
+        }
+    </script>
+{% endblock moreScript %}

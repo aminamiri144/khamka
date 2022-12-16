@@ -4,7 +4,19 @@ from django import forms
 from letters.models import Letter, Organ
 from django.core.exceptions import ValidationError
 from khamka.datetimeUtils import change_date_to_english
+from django_select2 import forms as s2forms
 
+
+class OrganWidget(s2forms.ModelSelect2Widget):
+    search_fields = [
+        "name__icontains",
+    ]
+
+class RequestWidget(s2forms.ModelSelect2Widget):
+    search_fields = [
+        "customer__fullname__icontains",
+        "number__icontains",
+    ]
 
 class LetterForm(forms.ModelForm):
     register_date = forms.CharField(label='تاریخ درخواست:')
@@ -23,12 +35,16 @@ class LetterForm(forms.ModelForm):
             'letter_type',
             'category'
         ]
+        widgets = { 
+            'recepiant': OrganWidget,
+            'request': RequestWidget,
+        }
 
     def __init__(self, *args, **kwargs):
         super(LetterForm, self).__init__(*args, **kwargs)
         for visible in self.visible_fields():
             visible.field.widget.attrs['class'] = 'form-control'
-        self.fields['request'].disabled = True
+        # self.fields['request'].disabled = True
 
    
     def clean_register_date(self):
