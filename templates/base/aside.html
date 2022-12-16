@@ -43,17 +43,17 @@
                 </a>
                 <ul class="collapse list-unstyled pl-4 w-100" id="ui-elements">
                     <li class="nav-item">
-                        <a class="nav-link pl-3" href="{% url 'customer-list' %}"><span class="ml-1 item-text">لیست درخواست دهنده ها</span></a>
+                        <a class="nav-link pl-3" href="{% url 'customer-list' %}"><i class="fe fe-list fe-16"></i><span class="ml-1 item-text">لیست درخواست دهنده ها</span></a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link pl-3" href="{% url 'customer-create' %}"><span class="ml-1 item-text">ثبت درخواست دهنده</span>
+                        <a class="nav-link pl-3" href="{% url 'customer-create' %}"><i class="fe fe-user-plus fe-16"></i><span class="ml-1 item-text">ثبت درخواست دهنده</span>
                     </a>
                 </ul>
             </li>
             <li class="nav-item dropdown">
                 <a href="{% url 'request-list' %}"
                    class="nav-link">
-                    <i class="fe fe-credit-card fe-16"></i>
+                    <i class="fe fe-edit fe-16"></i>
                     <span class="ml-3 item-text">درخواست ها</span>
                 </a>
                 {% comment %} <ul class="collapse list-unstyled pl-4 w-100" id="forms">
@@ -67,7 +67,7 @@
             </li>
             <li class="nav-item dropdown">
                 <a href="{% url 'letter-list' %}" class="nav-link">
-                    <i class="fe fe-grid fe-16"></i>
+                    <i class="fe fe-mail fe-16"></i>
                     <span class="ml-3 item-text">نامه ها</span>
                 </a>
                 {% comment %} <ul class="collapse list-unstyled pl-4 w-100" id="tables">
@@ -84,24 +84,17 @@
             </li>
             <li class="nav-item">
                 <a href="/panel" class="nav-link">
-                    <i class="fe fe-pie-chart fe-16"></i>
+                    <i class="fe fe-file-text fe-16"></i>
                     <span class="ml-3 item-text">گزارش ها</span>
                 </a>
-                {% comment %} <ul class="collapse list-unstyled pl-4 w-100" id="charts">
-                    <li class="nav-item">
-                        <a class="nav-link pl-3" href="./chart-inline.html"><span class="ml-1 item-text">Inline Chart</span></a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link pl-3" href="./chart-chartjs.html"><span class="ml-1 item-text">Chartjs</span></a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link pl-3" href="./chart-apexcharts.html"><span class="ml-1 item-text">ApexCharts</span></a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link pl-3" href="./datamaps.html"><span class="ml-1 item-text">Datamaps</span></a>
-                    </li>
-                </ul> {% endcomment %}
             </li>
+            <li class="nav-item">
+                <a href="/panel" class="nav-link">
+                    <i class="fe fe-smartphone fe-16"></i>
+                    <span class="ml-3 item-text">پنل پیامک</span>
+                </a>
+            </li>
+
         </ul>
     </nav>
 </aside>

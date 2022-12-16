@@ -38,13 +38,11 @@ class LetterCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
 class OrganCreateView(CreateView, LoginRequiredMixin, SuccessMessageMixin):
     model = Organ
     template_name = 'organ/create.html'
-    #success_url = '/letters/'
+    success_url = '/letters/create'
     form_class = OrganForm
     success_message = 'سازمان جدید با موفقیت افزوده شد !'
 
-    def get_success_url(self):
-        p = self.kwargs['craete_letter_id']
-        return f'/letters/create/{p}'
+
 
 
 
