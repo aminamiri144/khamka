@@ -114,35 +114,29 @@
                                             <thead>
                                               <tr>
                                                 <th>شماره نامه</th>
-                                                <th>تاریخ ارسال</th>
-                                                <th>گیرنده</th>
+                                                <th>تاریخ </th>
+                                                <th>نوع نامه</th>
+                                                <th>ارگان</th>
                                                 <th>وضعیت</th>
                                                 <th>عملیات</th>
                                               </tr>
                                             </thead>
                                             <tbody>
-                                              <tr>
-                                                <td>3224</td>
-                                                <td>Keith Baird</td>
-                                                <td>Enim Limited</td>
-                                                <td><span class="badge badge-pill badge-warning">Hold</span></td>
-                                                <td>Apr 24, 2019</td>
-                                              </tr>
-                                              <tr>
-                                                <td>3218</td>
-                                                <td>Graham Price</td>
-                                                <td>Nunc Lectus Incorporated</td>
-                                                <td><span class="badge badge-pill badge-success">Success</span></td>
-                                                <td>May 23, 2020</td>
-                                              </tr>
-                                              <tr>
-                                                <td>2651</td>
-                                                <td>Reuben Orr</td>
-                                                <td>Nisi Aenean Eget Limited</td>
-                                                <td><span class="badge badge-pill badge-warning">Hold</span></td>
-                                                <td>Nov 4, 2019</td>
-                                              </tr>
-                                             </tbody>
+                                                {% if letters_list %}
+                                                    {% for letter in letters_list %}
+                                                    <tr>
+                                                        <td>{{ letter.letter_number }}</td>
+                                                        <td>{{ letter.jd_register_date }}</td>
+                                                        <td>{{ letter.get_letter_type_display }}</td>
+                                                        <td>{{ letter.recepiant }}</td>
+                                                        <td><span class="badge badge-pill badge-primary">{{ letter.get_status_display }}</span></td>
+                                                        <td>
+                                                            <a class="btn btn-info btn-sm" href="{% url 'letter-detail' letter.id %}">مشاهده نامه</a>
+                                                        </td>
+                                                      </tr>
+                                                    {% endfor %}
+                                                {% endif %}
+                                            </tbody>
                                           </table>
                                     </div>
                                 </div>

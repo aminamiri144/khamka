@@ -1,6 +1,5 @@
 {% extends "base.html" %}
 {% load static %}
-{% comment %} {{ form.media.css }} {% endcomment %}
 {% block content %}
     {% include 'base/navigator.html' %}
     {% include 'base/aside.html' %}
@@ -72,5 +71,5 @@
         })
     }
     </script>
-    {{ form.media.js }}
+    <script src="/static/customers/js/django_select2.js"></script>
 {% endblock moreScript %}

@@ -22,7 +22,9 @@
         </form>
     </div>
 </div>
-{{ form.media.js }}
+
 <script src="{% static 'customers/js/jquery.min.js' %}"></script>
+<script src="{% static 'customers/plugins/select2/select2.min.js'%}"></script> 
+<script src="/static/customers/js/django_select2.js"></script>
 <script src="{% static 'customers/plugins/jalaliDatepicker/kamadatepicker.min.js'%}"></script>
 <script>kamaDatepicker('id_register_date', {buttonsColor: "green", forceFarsiDigits: true});</script>
