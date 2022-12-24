@@ -78,10 +78,10 @@ class UserLoginView(LoginView):
 
 
 
-class SoonView(TemplateView, LoginRequiredMixin):
+class SoonView(LoginRequiredMixin, TemplateView):
     template_name = "soon.html"
 
-class PanelView(TemplateView, LoginRequiredMixin):
+class PanelView(LoginRequiredMixin, TemplateView):
     template_name = "panel.html"
 
     def get_context_data(self, **kwargs):

@@ -27,7 +27,6 @@
                             <div class="card">
                                 <div class="card-body">
                                     <h4>نامه های در انتظار ارسال</h4>
-
                                     {% if waiting_letters %}
                                         <div class="table-responsive">
                                             <table class="table table-hover text-nowrap">
@@ -142,46 +141,17 @@
                                             </button>
                                         </div>
                                     {% endif %}
-                                    <div class="row">
-                                        <nav aria-label="">
-                                            <ul class="pagination">
-                                                {% if page_obj.has_previous %}
-                                                    <li class="page-item">
-                                                        <a class="page-link"
-                                                           href="?page={{ page_obj.previous_page_number }}"
-                                                           tabindex="-1">قبلی</a>
-                                                    </li>
-                                                {% else %}
-                                                    <li class="page-item disabled">
-                                                        <a class="page-link" href="">صفحه قبل</a>
-                                                    </li>
-                                                {% endif %}
-                                                <li class="page-item active">
-                                                    <a class="page-link" href="#">{{ page_obj.number }} <span class="sr-only">(صفحه فعلی)</span></a>
-                                                </li>
-                                                {% if page_obj.has_next %}
-                                                    <li class="page-item">
-                                                        <a class="page-link" href="?page={{ page_obj.next_page_number }}">صفحه بعد</a>
-                                                    </li>
-                                                {% else %}
-                                                    <li class="page-item disabled">
-                                                        <a class="page-link" href="">صفحه بعد</a>
-                                                    </li>
-                                                {% endif %}
-                                            </ul>
-                                        </nav>
-                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div class="row">
-                        
                         <div class="col-md-12">
                             <div class="card">
                                 <div class="card-body">
-                                    <h4>درخواست های جدید</h4>
-
+                                    <h4>
+                                        درخواست های جدید
+                                    </h4>
                                     {% if new_requests %}
                                         <div class="table-responsive">
                                             <table class="table table-hover text-nowrap">
@@ -332,35 +302,6 @@
                                             </button>
                                         </div>
                                     {% endif %}
-                                    <div class="row">
-                                        <nav aria-label="">
-                                            <ul class="pagination">
-                                                {% if page_obj.has_previous %}
-                                                    <li class="page-item">
-                                                        <a class="page-link"
-                                                           href="?page={{ page_obj.previous_page_number }}"
-                                                           tabindex="-1">قبلی</a>
-                                                    </li>
-                                                {% else %}
-                                                    <li class="page-item disabled">
-                                                        <a class="page-link" href="">صفحه قبل</a>
-                                                    </li>
-                                                {% endif %}
-                                                <li class="page-item active">
-                                                    <a class="page-link" href="#">{{ page_obj.number }} <span class="sr-only">(صفحه فعلی)</span></a>
-                                                </li>
-                                                {% if page_obj.has_next %}
-                                                    <li class="page-item">
-                                                        <a class="page-link" href="?page={{ page_obj.next_page_number }}">صفحه بعد</a>
-                                                    </li>
-                                                {% else %}
-                                                    <li class="page-item disabled">
-                                                        <a class="page-link" href="">صفحه بعد</a>
-                                                    </li>
-                                                {% endif %}
-                                            </ul>
-                                        </nav>
-                                    </div>
                                 </div>
                             </div>
                         </div>
