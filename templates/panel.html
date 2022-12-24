@@ -1,10 +1,394 @@
 {% extends "base.html" %}
-
-
+{% load static %}
+{% load jformat %}
 {% block content %}
-{% include "base/navigator.html" %}
-{% include "base/aside.html" %}
+    {% include 'base/navigator.html' %}
+    {% include 'base/aside.html' %}
+    <main role="main" class="main-content">
+        <div class="container-fluid">
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-{% if message.tags %}{{ message.tags }}{% endif %} alert-dismissible fade show"
+                         role="alert">
+                        {{ message|safe }}
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">x</span>
+                        </button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+            <div class="row justify-content-center">
+                <div class="col-12">
+                    <h2 class="mb-2 page-title">پیشخوان</h2>
+                    <p class="card-text">سامانه ثبت و پیگیری درخواست های مردمی خانه ملت کاشان</p>
+                    <div class="row my-4">
+                        <!-- Small table -->
+                        <div class="col-md-12">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h4>نامه های در انتظار ارسال</h4>
 
+                                    {% if waiting_letters %}
+                                        <div class="table-responsive">
+                                            <table class="table table-hover text-nowrap">
+                                                <thead>
+                                                    <tr>
+                                                        <th scope="col">شماره نامه</th>
+                                                        <th scope="col">عنوان نامه</th>
+                                                        <th scope="col">درخواست دهنده</th>
+                                                        <th scope="col">گیرنده</th>
+                                                        <th scope="col">وضعیت</th>
+                                                        <th scope="col">تاریخ</th>
+                                                        <th scope="col">عملیات</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    {% for letter in waiting_letters %}
+                                                        <tr>
+                                                            <th scope="row">{{ letter.letter_number }}</th>
+                                                            <td>{{ letter.title }}</td>
+                                                            <td>{{ letter.request.customer }}</td>
+                                                            <td>{{ letter.recepiant }}</td>
+                                                            <td>
+                                                                {% if letter.status == '1' %}
+                                                                    {% comment %} <span class="btn-sm btn-primary">ایجاد شده</span> {% endcomment %}
+                                                                    <span class="small text-muted">در انتظار ارسال</span>
+                                                                    <div class="progress mt-2" style="height: 3px;">
+                                                                        <div class="progress-bar bg-primary"
+                                                                             role="progressbar"
+                                                                             style="width: 10%"
+                                                                             aria-valuenow="10"
+                                                                             aria-valuemin="0"
+                                                                             aria-valuemax="100">
+                                                                        </div>
+                                                                    </div>
+                                                                {% elif letter.status == '2' %}
+                                                                    {% comment %} <span class="btn-sm btn-warning">درحال پیگیری در خانه ملت</span> {% endcomment %}
+                                                                    <span class="small text-muted">ارسال به دبیرخانه</span>
+                                                                    <div class="progress mt-2" style="height: 3px;">
+                                                                        <div class="progress-bar bg-warning"
+                                                                             role="progressbar"
+                                                                             style="width: 30%"
+                                                                             aria-valuenow="30"
+                                                                             aria-valuemin="0"
+                                                                             aria-valuemax="100">
+                                                                        </div>
+                                                                    </div>
+                                                                {% elif letter.status == '3' %}
+                                                                    <span class="small text-muted">ارسال شده</span>
+                                                                    <div class="progress mt-2" style="height: 3px;">
+                                                                        <div class="progress-bar bg-info"
+                                                                             role="progressbar"
+                                                                             style="width: 50%"
+                                                                             aria-valuenow="50"
+                                                                             aria-valuemin="0"
+                                                                             aria-valuemax="100">
+                                                                        </div>
+                                                                    </div>
+                                                                {% elif letter.status == '4' %}
+                                                                    <span class="small text-muted">درحال بررسی</span>
+                                                                    <div class="progress mt-2" style="height: 3px;">
+                                                                        <div class="progress-bar bg-success"
+                                                                             role="progressbar"
+                                                                             style="width: 70%"
+                                                                             aria-valuenow="70"
+                                                                             aria-valuemin="0"
+                                                                             aria-valuemax="100">
+                                                                        </div>
+                                                                    </div>
+                                                                {% elif letter.status == '5' %}
+                                                                    {% comment %} <span class="btn-warning btn-sm">در انتظار درخواست دهنده</span> {% endcomment %}
+                                                                    <span class="small text-muted">خاتمه یافته</span>
+                                                                    <div class="progress mt-2" style="height: 3px;">
+                                                                        <div class="progress-bar bg-info"
+                                                                             role="progressbar"
+                                                                             style="width: 90%"
+                                                                             aria-valuenow="90"
+                                                                             aria-valuemin="0"
+                                                                             aria-valuemax="100">
+                                                                        </div>
+                                                                    </div>
+                                                                {% else %}
+                                                                    نامشخص
+                                                                {% endif %}
+                                                            </td>
+                                                            <td>
+                                                                {{ letter.register_date|jformat:"%Y/%m/%d" }}
+                                                            </td>
+                                                            <td>
+                                                                <button type="button"
+                                                                        class="btn btn-warning btn-sm"
+                                                                        onclick="modal_url('/requestions/update/{{ request.id }}', 'update');"
+                                                                        data-toggle="modal"
+                                                                        data-target="#update_modal">
+                                                                    ویرایش
+                                                                </button>
+                                                                {% comment %} <button type="button" class="btn btn-info btn-sm" onclick="modal_url('/requestions/detail/{{ request.id }}', 'detail');" data-toggle="modal" data-target="#detail_modal">
+                                                                    مشاهده
+                                                                </button> {% endcomment %}
+                                                                <a href="{% url 'letter-detail' letter.id %}"
+                                                                   class="btn btn-info btn-sm">مشاهده نامه</a>
+                                                            </td>
+                                                        </tr>
+                                                    {% endfor %}
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    {% else %}
+                                        <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                                            هیچ نتیجه ای در جستجو یافت نشد! مجددا تلاش کنید.
+                                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                                <span aria-hidden="true">x</span>
+                                            </button>
+                                        </div>
+                                    {% endif %}
+                                    <div class="row">
+                                        <nav aria-label="">
+                                            <ul class="pagination">
+                                                {% if page_obj.has_previous %}
+                                                    <li class="page-item">
+                                                        <a class="page-link"
+                                                           href="?page={{ page_obj.previous_page_number }}"
+                                                           tabindex="-1">قبلی</a>
+                                                    </li>
+                                                {% else %}
+                                                    <li class="page-item disabled">
+                                                        <a class="page-link" href="">صفحه قبل</a>
+                                                    </li>
+                                                {% endif %}
+                                                <li class="page-item active">
+                                                    <a class="page-link" href="#">{{ page_obj.number }} <span class="sr-only">(صفحه فعلی)</span></a>
+                                                </li>
+                                                {% if page_obj.has_next %}
+                                                    <li class="page-item">
+                                                        <a class="page-link" href="?page={{ page_obj.next_page_number }}">صفحه بعد</a>
+                                                    </li>
+                                                {% else %}
+                                                    <li class="page-item disabled">
+                                                        <a class="page-link" href="">صفحه بعد</a>
+                                                    </li>
+                                                {% endif %}
+                                            </ul>
+                                        </nav>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        
+                        <div class="col-md-12">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h4>درخواست های جدید</h4>
 
-
+                                    {% if new_requests %}
+                                        <div class="table-responsive">
+                                            <table class="table table-hover text-nowrap">
+                                                <thead>
+                                                    <tr>
+                                                        <th scope="col">
+                                                            شماره درخواست
+                                                        </th>
+                                                        <th scope="col">
+                                                            عنوان درخواست
+                                                        </th>
+                                                        <th scope="col">
+                                                            درخواست دهنده
+                                                        </th>
+                                                        <th scope="col">
+                                                            وضعیت
+                                                        </th>
+                                                        <th scope="col">
+                                                            نتیجه
+                                                        </th>
+                                                        <th scope="col">
+                                                            تاریخ درخواست
+                                                        </th>
+                                                        <th scope="col">
+                                                            عملیات
+                                                        </th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    {% for request in new_requests %}
+                                                        <tr>
+                                                            <th scope="row">
+                                                                {{ request.number }}
+                                                            </th>
+                                                            <td>
+                                                                {{ request.title }}
+                                                            </td>
+                                                            <td>
+                                                                {{ request.customer_name }}
+                                                            </td>
+                                                            <td>
+                                                                {% if request.status == '1' %}
+                                                                    {% comment %} <span class="btn-sm btn-primary">ایجاد شده</span> {% endcomment %}
+                                                                    <span class="small text-muted">به تازگی ثبت شده</span>
+                                                                    <div class="progress mt-2" style="height: 3px;">
+                                                                        <div class="progress-bar bg-primary"
+                                                                             role="progressbar"
+                                                                             style="width: 10%"
+                                                                             aria-valuenow="10"
+                                                                             aria-valuemin="0"
+                                                                             aria-valuemax="100">
+                                                                        </div>
+                                                                    </div>
+                                                                {% elif request.status == '2' %}
+                                                                    {% comment %} <span class="btn-sm btn-warning">درحال پیگیری در خانه ملت</span> {% endcomment %}
+                                                                    <span class="small text-muted">درحال پیگیری در خانه ملت</span>
+                                                                    <div class="progress mt-2" style="height: 3px;">
+                                                                        <div class="progress-bar bg-warning"
+                                                                             role="progressbar"
+                                                                             style="width: 30%"
+                                                                             aria-valuenow="30"
+                                                                             aria-valuemin="0"
+                                                                             aria-valuemax="100">
+                                                                        </div>
+                                                                    </div>
+                                                                {% elif request.status == '3' %}
+                                                                    {% comment %} <span class="btn-sm btn-info">صدور نامه از طرف خانه ملت</span> {% endcomment %}
+                                                                    <span class="small text-muted">صدور نامه از خانه ملت</span>
+                                                                    <div class="progress mt-2" style="height: 3px;">
+                                                                        <div class="progress-bar bg-info"
+                                                                             role="progressbar"
+                                                                             style="width: 50%"
+                                                                             aria-valuenow="50"
+                                                                             aria-valuemin="0"
+                                                                             aria-valuemax="100">
+                                                                        </div>
+                                                                    </div>
+                                                                {% elif request.status == '4' %}
+                                                                    {% comment %} <span class="btn-sm btn-success">ارسال نامه به ارگان مربوطه</span> {% endcomment %}
+                                                                    <span class="small text-muted">ارسال نامه به ارگان مربوطه</span>
+                                                                    <div class="progress mt-2" style="height: 3px;">
+                                                                        <div class="progress-bar bg-success"
+                                                                             role="progressbar"
+                                                                             style="width: 70%"
+                                                                             aria-valuenow="70"
+                                                                             aria-valuemin="0"
+                                                                             aria-valuemax="100">
+                                                                        </div>
+                                                                    </div>
+                                                                {% elif request.status == '5' %}
+                                                                    {% comment %} <span class="btn-warning btn-sm">در انتظار درخواست دهنده</span> {% endcomment %}
+                                                                    <span class="small text-muted">در انتظار مراجعه درخواست دهنده</span>
+                                                                    <div class="progress mt-2" style="height: 3px;">
+                                                                        <div class="progress-bar bg-info"
+                                                                             role="progressbar"
+                                                                             style="width: 90%"
+                                                                             aria-valuenow="90"
+                                                                             aria-valuemin="0"
+                                                                             aria-valuemax="100">
+                                                                        </div>
+                                                                    </div>
+                                                                {% elif request.status == '6' %}
+                                                                    {% comment %} <span class="btn-sm btn-success">خاتمه یافته</span> {% endcomment %}
+                                                                    <span class="small text-muted">خاتمه یافته</span>
+                                                                    <div class="progress mt-2" style="height: 3px;">
+                                                                        <div class="progress-bar bg-success"
+                                                                             role="progressbar"
+                                                                             style="width: 100%"
+                                                                             aria-valuenow="100"
+                                                                             aria-valuemin="0"
+                                                                             aria-valuemax="100">
+                                                                        </div>
+                                                                    </div>
+                                                                {% else %}
+                                                                    نامشخص
+                                                                {% endif %}
+                                                            </td>
+                                                            <td>
+                                                                {{ request.get_result_display }}
+                                                            </td>
+                                                            <td>
+                                                                {{ request.register_date|jformat:"%Y/%m/%d" }}
+                                                            </td>
+                                                            <td>
+                                                                <button type="button"
+                                                                        class="btn btn-warning btn-sm"
+                                                                        onclick="modal_url('/requestions/update/{{ request.id }}', 'update');"
+                                                                        data-toggle="modal"
+                                                                        data-target="#update_modal">
+                                                                    ویرایش
+                                                                </button>
+                                                                {% comment %} <button type="button" class="btn btn-info btn-sm" onclick="modal_url('/requestions/detail/{{ request.id }}', 'detail');" data-toggle="modal" data-target="#detail_modal">
+                                                                    مشاهده
+                                                                </button> {% endcomment %}
+                                                                <a href="{% url 'request-detail' request.id %}"
+                                                                   class="btn btn-info btn-sm">مشاهده درخواست</a>
+                                                            </td>
+                                                        </tr>
+                                                    {% endfor %}
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    {% else %}
+                                        <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                                            هیچ نتیجه ای در جستجو یافت نشد! مجددا تلاش کنید.
+                                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                                <span aria-hidden="true">x</span>
+                                            </button>
+                                        </div>
+                                    {% endif %}
+                                    <div class="row">
+                                        <nav aria-label="">
+                                            <ul class="pagination">
+                                                {% if page_obj.has_previous %}
+                                                    <li class="page-item">
+                                                        <a class="page-link"
+                                                           href="?page={{ page_obj.previous_page_number }}"
+                                                           tabindex="-1">قبلی</a>
+                                                    </li>
+                                                {% else %}
+                                                    <li class="page-item disabled">
+                                                        <a class="page-link" href="">صفحه قبل</a>
+                                                    </li>
+                                                {% endif %}
+                                                <li class="page-item active">
+                                                    <a class="page-link" href="#">{{ page_obj.number }} <span class="sr-only">(صفحه فعلی)</span></a>
+                                                </li>
+                                                {% if page_obj.has_next %}
+                                                    <li class="page-item">
+                                                        <a class="page-link" href="?page={{ page_obj.next_page_number }}">صفحه بعد</a>
+                                                    </li>
+                                                {% else %}
+                                                    <li class="page-item disabled">
+                                                        <a class="page-link" href="">صفحه بعد</a>
+                                                    </li>
+                                                {% endif %}
+                                            </ul>
+                                        </nav>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- simple table -->
+                </div>
+                <!-- end section -->
+            </div>
+            <!-- .col-12 -->
+        </div>
+        <!-- .row -->
+    </main>
+    {% include 'base/updateModal.html' %}
+    {% include 'base/detailModal.html' %}
 {% endblock content %}
+{% block moreScript %}
+    {% comment %} <script src="{% static 'customers/js/datatablescripts.js'%}"></script> {% endcomment %}
+    <script src="{% static 'customers/plugins/jalaliDatepicker/kamadatepicker.min.js'%}"></script>
+    <script>kamaDatepicker('id_register_date', {buttonsColor: "green", forceFarsiDigits: true});</script>
+    <script>
+function modal_url(url, type) {
+    $.ajax({
+        url: url,
+        type: 'GET',
+        success: function (data) {
+            $("#"+ type +"_modal_body").html(data);
+        }
+    })
+}
+    </script>
+{% endblock moreScript %}

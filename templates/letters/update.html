@@ -4,7 +4,8 @@
         <form action="{{ request.path }}"
               method="post"
               autocomplete="off"
-              id="update-form">
+              id="update-form"
+              enctype="multipart/form-data">
             {% csrf_token %}
             {% for field in form %}
                 {% for error in field.errors %}

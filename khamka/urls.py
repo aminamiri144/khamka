@@ -22,11 +22,13 @@ from khamka.views import *
 
 
 urlpatterns = [
+    # path('', Index.as_view(), name='index'),
     path('admin/', admin.site.urls),
     path('requestions/', include('requisitions.urls')),
     path('customers/', include('customers.urls')),
     path('letters/', include('letters.urls')),
-    path('panel/', PanelView.as_view(), name="panel"),
+    path('', PanelView.as_view(), name="panel"),
+    path('coming-soon/', SoonView.as_view(), name="soon"),
     path('accounts/login/', UserLoginView.as_view(), name='login'),
     path('logout/', UserLogoutView.as_view(), name='logout'),
     path('register/', registerrequest),

@@ -6,6 +6,17 @@ from django.views.generic import TemplateView
 from django.views import View
 from django.contrib.auth import logout
 from django.shortcuts import redirect
+from requisitions.models import Request
+from letters.models import Letter
+
+
+
+# class Index(TemplateView):
+#     template_name = "landing/index.html"
+
+
+
+
 class LoginRequiredMixin(object):
     """
     این کلاس در بررسی لاگین بودن یا نبودن
@@ -49,10 +60,10 @@ class UserLoginView(LoginView):
 
     """
     template_name = 'login.html'
-    success_url = '/panel'
+    success_url = '/'
 
     def get_redirect_url(self):
-        return '/panel'
+        return '/'
 
     # def form_valid(self, form):
     #     """
@@ -67,10 +78,21 @@ class UserLoginView(LoginView):
 
 
 
-
+class SoonView(TemplateView, LoginRequiredMixin):
+    template_name = "soon.html"
 
 class PanelView(TemplateView, LoginRequiredMixin):
     template_name = "panel.html"
+
+    def get_context_data(self, **kwargs):
+        # Call the base implementation first to get a context
+        context = super().get_context_data(**kwargs)
+        # Add in a QuerySet of all the books
+        context['new_requests'] = Request.objects.filter(status='1')
+        context['waiting_letters'] = Letter.objects.filter(status='1')
+        return context
+
+
 
 
 def registerrequest(request):
