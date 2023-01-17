@@ -12,21 +12,35 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 
 import os
 from pathlib import Path
+import environ
+
+
+
+env = environ.Env(
+    # set casting, default value
+    DEBUG=(bool, False)
+)
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+environ.Env.read_env(os.path.join(BASE_DIR, 'develop.env'))
+
+
+IS_IN_SERVER = env('IIS')
+
+ADMIN_URL = env('ADMIN_URL')
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-)#b3355!bpf0if81*pykwucy_s5s0i$)oi65vpxyrya-1i4v!i'
+SECRET_KEY = env('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = env('DEBUG')
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = env('ALLOWED_HOSTS')
 
 
 # Application definition
@@ -89,15 +103,15 @@ WSGI_APPLICATION = 'khamka.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'khamka', 
-        'USER': 'postgres',
-        'PASSWORD': '125313',
-        'HOST': 'localhost', 
-        'PORT': '5432',
+        'ENGINE': env('ENGINE'),
+        'NAME': env('DB_NAME'), 
+        'USER': env('DB_USER'),
+        'PASSWORD': env('DB_PASSWORD'),
+        'HOST': env('DB_HOST'), 
+        'PORT': env('DB_PORT'),
+        'OPTIONS': {'autocommit': env('DB_OPTIONS'),} if IS_IN_SERVER == True else {}
     }
 }
-
 
 CACHES = {
     # … default cache config and others
@@ -141,7 +155,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/3.2/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'fa'
 
 TIME_ZONE = 'UTC'
 
@@ -158,8 +172,13 @@ USE_TZ = True
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
-MEDIA_URL = '/media/'
-MEDIA_ROOT =  os.path.join(BASE_DIR, 'media')
+
+if IS_IN_SERVER:
+    MEDIA_URL = '/media/'
+    MEDIA_ROOT =  '/home/khamkair/public_html/media/'
+else:
+    MEDIA_URL = '/media/'
+    MEDIA_ROOT =  os.path.join(BASE_DIR, 'media')
 
 ASSETS_URL = '/assets/'
 ASSETS_ROOT =  os.path.join(BASE_DIR, 'templates/assets')

@@ -87,15 +87,13 @@ class LetterDetailView(DetailView, LoginRequiredMixin):
     model = Letter
     template_name = 'letters/detail.html'
 
-    def get_context_data(self, **kwargs):
-        context = super(LetterDetailView, self).get_context_data(**kwargs)
-        imgstr = self.object.image.name
-        print(type(imgstr))
-        img = imgstr.split('/')
-        imgName = img[1]
-        print(imgName)
-        context['imgname'] = imgName
-        return context
+    # def get_context_data(self, **kwargs):
+    #     context = super(LetterDetailView, self).get_context_data(**kwargs)
+    #     imgstr = self.object.image.name
+    #     img = imgstr.split('/')
+    #     imgName = img[1]
+    #     context['imgname'] = imgName
+    #     return context
 
 
 

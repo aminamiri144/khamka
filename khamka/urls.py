@@ -19,11 +19,11 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 from khamka.views import *
-
+from khamka.settings import ADMIN_URL
 
 urlpatterns = [
     # path('', Index.as_view(), name='index'),
-    path('admin/', admin.site.urls),
+    path(f'{ADMIN_URL}/', admin.site.urls),
     path('requestions/', include('requisitions.urls')),
     path('customers/', include('customers.urls')),
     path('letters/', include('letters.urls')),

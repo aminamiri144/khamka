@@ -115,7 +115,7 @@
                             <div class="card shadow">
                                 <div class="card-header">
                                     <div class="row align-items-center">
-                                        {% if object.image %}
+                                        {% comment %} {% if object.image %}
                                             <img src="/media/{{ object.image }}"
                                                  class="img-fluid"
                                                  alt="Responsive image"/>
@@ -125,7 +125,9 @@
                                                     تصویر نامه بارگزاری نشده
                                                 </h4>
                                             </div>
-                                        {% endif %}
+                                        {% endif %} {% endcomment %}
+                                        <iframe src="http://docs.google.com/gview?url=https://khamka.ir/{{ object.image }}&embedded=true" 
+                                        style="width:600px; height:500px;" frameborder="0"></iframe>
                                     </div>
                                 </div>
                                 {% comment %} <div class="card-body">
