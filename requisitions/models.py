@@ -30,7 +30,7 @@ class Category(models.Model):
 
 
 def generate_request_id():
-    num = random.randint(10000, 99999)
+    num = random.randint(100000, 999999)
     request_number = f'{num}'
     return request_number
 
@@ -127,3 +127,28 @@ class Survey(models.Model):
         auto_now_add=True, verbose_name='تاریخ ثبت نظرسنجی')
     score = models.CharField(choices=SCORES, blank=True, null=True,
                              verbose_name='امتیاز', max_length=20, default='6')
+
+
+def generate_attachments_path_file():
+    y = jd.now().year
+    m = jd.now().month
+    path = f'attachments/{y}/{m}'
+    return path
+
+
+class Attachment(models.Model):
+    request = models.ForeignKey(Request, on_delete=models.CASCADE, verbose_name='درخواست')
+    name = models.CharField(max_length=30, blank=False, null=False, verbose_name='نام یا توضیحات')
+    filename = models.FileField(upload_to=generate_attachments_path_file(), blank=False, null=False, verbose_name='فایل')
+    register_date = jmodels.jDateField(verbose_name='تاریخ ایجاد', blank=True, null=True)
+
+    
+    def jd_register_date(self):
+        jd_reg_date = str(self.register_date).replace('-','/')
+        try:
+            return jd_reg_date
+        except:
+            return 'ثبت نشده!'
+
+    def __str__(self):
+        return f"{self.name}"

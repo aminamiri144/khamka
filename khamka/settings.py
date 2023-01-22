@@ -16,10 +16,7 @@ import environ
 
 
 
-env = environ.Env(
-    # set casting, default value
-    DEBUG=(bool, False)
-)
+env = environ.Env()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -27,7 +24,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 environ.Env.read_env(os.path.join(BASE_DIR, 'develop.env'))
 
 
-IS_IN_SERVER = env('IIS')
+IS_IN_SERVER = False if env('IIS') == 'false' else True
 
 ADMIN_URL = env('ADMIN_URL')
 
@@ -38,7 +35,8 @@ ADMIN_URL = env('ADMIN_URL')
 SECRET_KEY = env('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = env('DEBUG')
+DEBUG = False if env('DEBUG') == 'false' else True
+
 
 ALLOWED_HOSTS = env('ALLOWED_HOSTS')
 
@@ -58,6 +56,7 @@ INSTALLED_APPS = [
     'customers.apps.CustomersConfig',
     'letters.apps.LettersConfig',
     'django_select2',
+    'django_cleanup.apps.CleanupConfig',
 ]
 
 MIDDLEWARE = [
@@ -94,12 +93,6 @@ WSGI_APPLICATION = 'khamka.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'db.sqlite3',
-#     }
-# }
 
 DATABASES = {
     'default': {
@@ -109,9 +102,11 @@ DATABASES = {
         'PASSWORD': env('DB_PASSWORD'),
         'HOST': env('DB_HOST'), 
         'PORT': env('DB_PORT'),
-        'OPTIONS': {'autocommit': env('DB_OPTIONS'),} if IS_IN_SERVER == True else {}
+        'OPTIONS': {'autocommit': env('DB_OPTIONS'),} if IS_IN_SERVER else {}
     }
 }
+
+
 
 CACHES = {
     # … default cache config and others
@@ -171,7 +166,6 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
-
 
 if IS_IN_SERVER:
     MEDIA_URL = '/media/'

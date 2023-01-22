@@ -39,6 +39,12 @@ class LetterCategory(models.Model):
         return f'{self.subject}'
 
 
+def generate_letters_path_file():
+    y = jd.now().year
+    m = jd.now().month
+    path = f'letters/{y}/{m}'
+    return path
+
 
 class Letter(models.Model):
     class Meta:
@@ -64,7 +70,7 @@ class Letter(models.Model):
     request = models.ForeignKey(Request, blank=True, null=True, verbose_name='درخواست مرجع', on_delete=models.PROTECT)
     register_date = jmodels.jDateField(verbose_name='تاریخ نامه', blank=False, null=False)
     descrption = models.TextField(verbose_name='توضیحات', blank=True, null=True)
-    image = models.FileField(upload_to=f'letters/%Y/%m/%d/', verbose_name='تصویر نامه', blank=True, null=True)
+    image = models.FileField(upload_to=generate_letters_path_file(), verbose_name='تصویر نامه', blank=True, null=True)
     recepiant = models.ForeignKey(Organ, blank=True, null=True, verbose_name='گیرنده یا فرستنده', default='5', on_delete=models.SET_NULL)
     status = models.CharField(choices=LETTER_STATUS, blank=False, null=False, verbose_name='وضعیت نامه', max_length=30)
     letter_type = models.CharField(choices=LETTER_TYPE, blank=False, null=False, verbose_name='نوع نامه', max_length=30)

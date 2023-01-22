@@ -1,6 +1,6 @@
 from django import forms
 import customers
-from requisitions.models import Request
+from requisitions.models import Request, Attachment
 from django.core.exceptions import ValidationError
 from khamka.datetimeUtils import change_date_to_english
 
@@ -47,6 +47,29 @@ class RequestsUpdateForm(forms.ModelForm):
         self.fields['title'].disabled = True
         self.fields['number'].disabled = True
         self.fields['customer'].disabled = True
+
+    def clean_register_date(self):
+        register_date = self.cleaned_data['register_date']
+        try:
+            register_date = change_date_to_english(register_date, 2)
+        except:
+            register_date = register_date
+        return register_date
+
+
+class AttachmentForm(forms.ModelForm):
+    register_date = forms.CharField(label='تاریخ افزودن پیوست:')
+
+    class Meta:
+        model = Attachment
+        fields = '__all__'
+        
+        
+    def __init__(self, *args, **kwargs):
+        super(AttachmentForm, self).__init__(*args, **kwargs)
+        for visible in self.visible_fields():
+            visible.field.widget.attrs['class'] = 'form-control'
+        self.fields['request'].disabled = True
 
     def clean_register_date(self):
         register_date = self.cleaned_data['register_date']
