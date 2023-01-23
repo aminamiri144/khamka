@@ -37,9 +37,12 @@ SECRET_KEY = env('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False if env('DEBUG') == 'false' else True
 
-
-ALLOWED_HOSTS = env('ALLOWED_HOSTS')
-
+if IS_IN_SERVER:
+    allowed_hosts = env('ALLOWED_HOSTS')
+    allowed_hosts = allowed_hosts.split(',')
+    ALLOWED_HOSTS = allowed_hosts
+else: 
+    ALLOWED_HOSTS = ['*']
 
 # Application definition
 
