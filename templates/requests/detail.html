@@ -99,22 +99,21 @@
                                 <div class="card-body">
                                     <div class="row">
                                         {% if attachment_list %}
-                                        <table class="table">
-                                            <thead>
-                                                <tr>
-                                                    <th>
-                                                        نام پیوست
-                                                    </th>
-                                                    <th>
-                                                        تاریخ افزودن
-                                                    </th>
-                                                    <th>
-                                                        عملیات
-                                                    </th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                               
+                                            <table class="table">
+                                                <thead>
+                                                    <tr>
+                                                        <th>
+                                                            نام پیوست
+                                                        </th>
+                                                        <th>
+                                                            تاریخ افزودن
+                                                        </th>
+                                                        <th>
+                                                            عملیات
+                                                        </th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
                                                     {% for att in attachment_list %}
                                                         <tr>
                                                             <td>
@@ -128,30 +127,30 @@
                                                                    onclick="modal_pdf('media/{{ att.filename }}')"
                                                                    data-toggle="modal"
                                                                    data-target="#detail_modal">
-                                                                   <span class="fe fe-eye fe-14 mr-1"></span>
-                                                                   مشاهده 
+                                                                    <span class="fe fe-eye fe-14 mr-1"></span>
+                                                                    مشاهده
                                                                 </a>
                                                                 <a href="/media/{{ att.filename }}" class="btn btn-success btn-sm">
                                                                     <span class="fe fe-download fe-14 mr-1"></span>
-                                                                    دریافت 
+                                                                    دریافت
                                                                 </a>
                                                                 <a class="btn btn-danger btn-sm"
                                                                    onclick="modal_url('{% url 'attachment-delete' att.id %}', 'detail')"
                                                                    data-toggle="modal"
                                                                    data-target="#detail_modal">
-                                                                   <span class="fe fe-delete fe-14 mr-1"></span>
-                                                                   حذف 
+                                                                    <span class="fe fe-delete fe-14 mr-1"></span>
+                                                                    حذف
                                                                 </a>
                                                             </td>
                                                         </tr>
                                                     {% endfor %}
                                                 {% else %}
-                                                <div class="alert alert-warning alert-dismissible fade show" role="alert">
-                                                     درحال حاضر پیوستی برای این درخواست ثبت نشده!
-                                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                                        <span aria-hidden="true">x</span>
-                                                    </button>
-                                                </div>
+                                                    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                                                        درحال حاضر پیوستی برای این درخواست ثبت نشده!
+                                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                                            <span aria-hidden="true">x</span>
+                                                        </button>
+                                                    </div>
                                                 {% endif %}
                                             </tbody>
                                         </table>
@@ -173,31 +172,31 @@
                                 </div>
                                 <div class="card-body">
                                     <div class="row">
-                                        <table class="table">
-                                            <thead>
-                                                <tr>
-                                                    <th>
-                                                        شماره نامه
-                                                    </th>
-                                                    <th>
-                                                        تاریخ
-                                                    </th>
-                                                    <th>
-                                                        نوع نامه
-                                                    </th>
-                                                    <th>
-                                                        ارگان
-                                                    </th>
-                                                    <th>
-                                                        وضعیت
-                                                    </th>
-                                                    <th>
-                                                        عملیات
-                                                    </th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                {% if letters_list %}
+                                        {% if letters_list %}
+                                            <table class="table">
+                                                <thead>
+                                                    <tr>
+                                                        <th>
+                                                            شماره نامه
+                                                        </th>
+                                                        <th>
+                                                            تاریخ
+                                                        </th>
+                                                        <th>
+                                                            نوع نامه
+                                                        </th>
+                                                        <th>
+                                                            ارگان
+                                                        </th>
+                                                        <th>
+                                                            وضعیت
+                                                        </th>
+                                                        <th>
+                                                            عملیات
+                                                        </th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
                                                     {% for letter in letters_list %}
                                                         <tr>
                                                             <td>
@@ -221,9 +220,16 @@
                                                             </td>
                                                         </tr>
                                                     {% endfor %}
-                                                {% endif %}
-                                            </tbody>
-                                        </table>
+                                                </tbody>
+                                            </table>
+                                        {% else %}
+                                            <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                                                درحال حاضر نامه ای برای این درخواست ثبت نشده!
+                                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                                    <span aria-hidden="true">x</span>
+                                                </button>
+                                            </div>
+                                        {% endif %}
                                     </div>
                                 </div>
                             </div>
