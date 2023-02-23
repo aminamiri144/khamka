@@ -62,7 +62,7 @@ class Request(models.Model):
     )
     objects = jmodels.jManager()
     number = models.CharField(verbose_name='شماره درخواست',
-                              default=generate_request_id(), max_length=5)
+                              default=generate_request_id(), max_length=6)
     title = models.CharField(
         max_length=150, verbose_name='عنوان درخواست', blank=False, null=False)
     register_date = jmodels.jDateField(
