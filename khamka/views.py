@@ -12,7 +12,11 @@ from letters.models import Letter
 from requisitions.forms import RequestsForm, RequestForm2
 from customers.forms import CustomerForm
 from customers.models import Customer
-
+from django.middleware import csrf
+from customers.models import CodeAuthSMS
+import time
+import random
+import json
 # class Index(TemplateView):
 #     template_name = "landing/index.html"
 
@@ -93,8 +97,66 @@ class PanelView(LoginRequiredMixin, TemplateView):
 
 
 def registerrequest(request):
-    context = {}
-    return render(request, 'rere.html', context=context)
+    if request.method == 'GET':
+        if 'mobile_auth' in request.session:
+            print('session is already created')
+        else:
+            request.session['mobile_auth'] = [{
+                'mobile_number': '',
+                'is_verified': False,
+                'session_lvl': '0',
+            }]
+            request.session.modified = True
+            print('session is now create')
+        context = {'data': """<label for="phoneNumber">لطفا شماره تلفن همراه خود را وارد کنید.</label>
+              <input type="phone" id="phoneNumber" name="phoneNumber" class="form-control">"""}
+        return render(request, 'rere.html', context=context)
+
+    if request.method == 'POST':
+        lvl = request.session['mobile_auth'][0]['session_lvl']
+        if lvl == '0':
+            request.session['mobile_auth'][0]['mobile_number'] = request.POST['phoneNumber']
+            code = random.randint(10000, 99999)
+
+            authCode = CodeAuthSMS(
+                phone=request.POST['phoneNumber'],
+                code=code,
+                is_active=True,
+                time_expiry=str(int(time.time()) + 120),
+            )
+            authCode.save()
+
+            print(request.session['mobile_auth'])
+            request.session['mobile_auth'][0]['session_lvl'] = '1'
+            request.session.modified = True
+            context = {
+                'data': f"""
+            <label for="phoneNumber">لطفا شماره تلفن همراه خود را وارد کنید.</label>
+            <input type="phone" id="phoneNumber" name="phoneNumber" class="form-control" placeholder="{request.session['mobile_auth'][0]['mobile_number']}">
+            <label for="phoneNumber">کد پیامک شده را وارد کنید</label>
+            <input type="charfield" id="regcode" name="regcode" class="form-control" placeholder="کد 5 رقمی پیامک شده به شماره موبایل را وارد کنید">
+            <div class="timer" style="justify-content: center; align-items: center; height: 5vh;">
+                <p>2:00</p>
+            </div>
+            """,
+            }
+            return render(request, 'rere.html', context=context)
+        if lvl == '1':
+            if request.method == 'POST':
+                request_data = json.loads(request.body)
+                if request_data['status'] == 'finish_time':
+                    request.session['mobile_auth'] = [{
+                        'mobile_number': '',
+                        'is_verified': False,
+                        'session_lvl': '0',
+                    }]
+                    request.session.modified = True
+                    context = {'data':
+                       """
+                        <label for="phoneNumber">لطفا شماره تلفن همراه خود را وارد کنید.</label>
+                        <input type="phone" id="phoneNumber" name="phoneNumber" class="form-control">
+                        """}
+                    return render(request, 'rere.html', context=context)
 
 
 class UserLogoutView(LoginRequiredMixin, View):
@@ -119,6 +181,7 @@ class UserLogoutView(LoginRequiredMixin, View):
 
 
 def register_customer_request(request):
+
     message = ''
     if request.method == 'POST':
         customer_form = CustomerForm(request.POST)
@@ -154,7 +217,7 @@ def register_customer_request(request):
 
             else:
                 message = 'این درخواست دهنده با این شماره موبایل قبلا ثبت شده. لطفا از صفحه درخواست دهندگان اقدام به ثبت درخواست کنید.'
-        
+
         context = {
             'request_form': request_form,
             'customer_form': customer_form,

@@ -51,3 +51,18 @@ class Customer(models.Model):
 
     def __str__(self):
         return self.fullname
+
+
+
+class CodeAuthSMS(models.Model):
+    class Meta:
+        verbose_name = ('کد اعتبار سنجی')
+        verbose_name_plural = ('کد های اعتبار سنجی')
+
+    phone = models.CharField(verbose_name='شماره تلفن همراه', max_length=11)
+    code = models.IntegerField(verbose_name='کد احراز هویت')
+    is_active = models.BooleanField(verbose_name='فعال بودن کد')
+    time_expiry = models.CharField(verbose_name='زمان انقضا', max_length=30)
+
+    def __str__(self):
+        return f'{self.phone} | {self.code} | {self.is_active} | {self.time_expiry}'
