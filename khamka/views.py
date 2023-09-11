@@ -65,10 +65,10 @@ class UserLoginView(LoginView):
 
     """
     template_name = 'login.html'
-    success_url = '/'
+    success_url = '/panel'
 
     def get_redirect_url(self):
-        return '/'
+        return '/panel'
 
     # def form_valid(self, form):
     #     """
@@ -111,22 +111,22 @@ class AuthSession:
 
     def get_input_phone(self, value, more):
         return f"""<label for="phoneNumber">لطفا شماره تلفن همراه خود را وارد کنید.</label>
-            <input type="phone" id="phoneNumber" name="phoneNumber" class="form-control" value="{value}" {more}>"""
+            <input type="phone" id="phoneNumber" name="phoneNumber" class="form-control" value="{value}" {more} maxlength="11" required>"""
 
     def get_input_code(self):
         return """
             <label for="phoneNumber">کد 5 رقمی پیامک شده را وارد کنید</label>
-            <input type="charfield" id="regcode" name="regcode" class="form-control" placeholder="کد 5 رقمی پیامک شده به شماره موبایل را وارد کنید">
+            <input type="charfield" id="regcode" name="regcode" class="form-control" placeholder="کد 5 رقمی پیامک شده به شماره موبایل را وارد کنید" maxlength="5" required>
             <div class="timer" style="justify-content: center; align-items: center; height: 5vh;">
                 <p>زمان انقضای کد</p>
-            </div> """
+            </div>"""
 
     def create_new_session(self):
         self.req.session['mobile_auth'] = [{
-                'mobile_number': '',
-                'is_verified': False,
-                'session_lvl': '0',
-            }]
+            'mobile_number': '',
+            'is_verified': False,
+            'session_lvl': '0',
+        }]
         self.req.session.modified = True
 
     def create_auth_code(self, phone_number, expiry_time):
@@ -138,11 +138,10 @@ class AuthSession:
             time_expiry=str(int(time.time()) + expiry_time),
         )
         authCode.save()
-    
+
     def get_latest_authCode(self):
         return CodeAuthSMS.objects.filter(phone=self.get_session_data('mobile_number')).latest('time_expiry')
 
-    
     def alert_rase(self, type, message):
         return f"""
             <div class="alert alert-{ type }" role="alert">
@@ -151,54 +150,68 @@ class AuthSession:
         """
 
     def get_expiry_time_status(self, phone_number):
-        a = CodeAuthSMS.objects.filter(phone=phone_number).latest('time_expiry')
-        remaining_expiry_time = int(time.time()) - int(a.time_expiry) 
+        a = CodeAuthSMS.objects.filter(
+            phone=phone_number).latest('time_expiry')
+        remaining_expiry_time = int(time.time()) - int(a.time_expiry)
         return abs(remaining_expiry_time)
 
-
-    def get_context(self, data, request_is_POST=True):
+    def get_context(self, data, request_is_POST=True, title_lvl=''):
         ex = ''
         if request_is_POST:
-            ex = self.get_expiry_time_status(self.get_session_data('mobile_number'))
+            ex = self.get_expiry_time_status(
+                self.get_session_data('mobile_number'))
 
         return {
             'data': data,
-            'expiry_code_time' : ex ,
+            'expiry_code_time': ex,
+            'title_lvl': title_lvl,
         }
 
-        
+    def get_register_customer_form(self):
+        return """
+            <label for="fullname">نام و نام خانوادگی</label>
+            <input type="charfield" id="fullname" name="fullname" class="form-control" required>
+            <label for="codemeli">کد ملی</label>
+            <input type="charfield" id="codemeli" name="codemeli" class="form-control" maxlength="10" required>  
+        """
 
 
-
-
-def registerrequest(request):
+def two_factor_auth_login(request):
     s = AuthSession(request)
     HTML_FILE = 'rere.html'
     EXPIRE_CODE_TIME = 120
-
+    TITLE_LEVELS = [
+        'ورود به سامانه',
+        'تایید شماره تلفن',
+        'ثبت نام اولیه در سامانه',
+        'ثبت درخواست'
+    ]
     if request.method == 'GET':
         if 'mobile_auth' in request.session and s.get_session_data('session_lvl') == '1':
-            auth = CodeAuthSMS.objects.filter(phone=s.get_session_data('mobile_number')).latest('time_expiry')
+            auth = CodeAuthSMS.objects.filter(
+                phone=s.get_session_data('mobile_number')).latest('time_expiry')
             print(auth)
             s.create_new_session()
         else:
             s.create_new_session()
-        context = s.get_context(data = s.get_input_phone('', """placeholder="شماره تلفن را وارد کنید. مثال 09123456789" """), request_is_POST=False)
+        context = s.get_context(data=s.get_input_phone(
+            '', """placeholder="شماره تلفن را وارد کنید. مثال 09123456789" """), request_is_POST=False, title_lvl=TITLE_LEVELS[0])
         return render(request, HTML_FILE, context)
 
     # POST request
     if request.method == 'POST':
         lvl = s.get_session_data('session_lvl')
-        
+
         # SESSION LEVEL 0
         if lvl == '0':
-            phone_number =  request.POST['phoneNumber']
+            phone_number = request.POST['phoneNumber']
             s.add_session_data('mobile_number', phone_number)
             s.create_auth_code(phone_number, EXPIRE_CODE_TIME)
 
             print(request.session['mobile_auth'])
             s.add_session_data('session_lvl', '1')
-            context = s.get_context(data = s.get_input_phone(phone_number, "disabled") + s.get_input_code())
+            context = s.get_context(data=s.get_input_phone(
+                phone_number, "disabled") + s.get_input_code(), title_lvl=TITLE_LEVELS[1])
             return render(request, HTML_FILE, context)
 
         # SESSION LEVEL 1
@@ -208,31 +221,50 @@ def registerrequest(request):
                 if request_data['status'] == 'finish_time':
                     s.create_new_session()
                     # context = {'data': s.get_input_phone('', ''),'expire_code_time' : EXPIRE_CODE_TIME}
-                    context = s.get_context(data=s.get_input_phone('', ''))
+                    context = s.get_context(data=s.get_input_phone(
+                        '', ''), title_lvl=TITLE_LEVELS[0])
                     return render(request, HTML_FILE, context)
             except Exception as e:
                 auth_obj = s.get_latest_authCode()
+                # بررسی فعال بودن کد تایید و
                 if auth_obj.is_active == True and auth_obj.code == int(request.POST.get('regcode')):
                     print('login successful')
+                    # بررسی شماره تلفن و ورود به صورت کارمند
                     try:
-                        user_obj = User.objects.filter(username= auth_obj.phone)[0].username
+                        user_obj = User.objects.filter(
+                            username__exact=auth_obj.phone)[0].username
                     except:
                         user_obj = None
+                    # بررسی شماره تلفن و ورود به عنوان ارباب رجوع
                     if auth_obj.phone == user_obj:
-                        user = User.objects.get(username__exact= auth_obj.phone)
+                        user = User.objects.get(username__exact=auth_obj.phone)
                         # user.backend = 'django.contrib.auth.backends.ModelBackend'
                         login(request, user)
                         print('user is admin -> login ')
-                        return redirect('/admin')
-                    elif auth_obj.phone == '':
-                        pass
+                        return redirect('/panel')
+
+                    elif not Customer.objects.filter(phoneNumber=auth_obj.phone).exists():
+                        s.add_session_data('session_lvl', '2')
+                        return redirect('/register')
+
                 elif auth_obj.is_active == False:
                     print('login failed - time expired')
                 else:
                     print('auth Code is incorrect')
-                    context = s.get_context(data = s.alert_rase('warning' , 'کد وارد شده اشتباه است !') +  s.get_input_phone(s.get_session_data('mobile_number'), "disabled") + s.get_input_code())
+                    context = s.get_context(data=s.alert_rase('warning', 'کد وارد شده اشتباه است !') + s.get_input_phone(s.get_session_data('mobile_number'), "disabled") + s.get_input_code(), title_lvl=TITLE_LEVELS[1])
                     return render(request, HTML_FILE, context)
+        elif lvl == '2':
 
+            if request.POST.get('fullname'):
+                print('fullname is :' , request.POST['fullname'])
+                context = s.get_context(data=s.get_register_customer_form(), title_lvl=TITLE_LEVELS[2])
+                print(request.session)
+                return render(request, HTML_FILE, context)
+            else:
+                print('fullname is empty')
+                context = s.get_context(data=s.get_register_customer_form(), title_lvl=TITLE_LEVELS[2])
+                print(request.session)
+                return render(request, HTML_FILE, context)
 
 
 class UserLogoutView(LoginRequiredMixin, View):

@@ -18,7 +18,7 @@ from django.urls import path, include
 
 from django.conf import settings
 from django.conf.urls.static import static
-from khamka.views import PanelView, SoonView, UserLoginView, UserLogoutView, register_customer_request, registerrequest
+from khamka.views import PanelView, SoonView, UserLoginView, UserLogoutView, register_customer_request, two_factor_auth_login
 from khamka.settings import ADMIN_URL
 
 urlpatterns = [
@@ -27,13 +27,14 @@ urlpatterns = [
     path('requestions/', include('requisitions.urls')),
     path('customers/', include('customers.urls')),
     path('letters/', include('letters.urls')),
-    path('', PanelView.as_view(), name="panel"),
+    path('panel/', PanelView.as_view(), name="panel"),
     path('coming-soon/', SoonView.as_view(), name="soon"),
     path('accounts/login/', UserLoginView.as_view(), name='login'),
     path('logout/', UserLogoutView.as_view(), name='logout'),
-    path('register/', registerrequest),
+    path('register/', two_factor_auth_login),
     path("select2/", include("django_select2.urls")),
-    path('reg-customer-request/', register_customer_request, name='reg-cureq'), # register both customer and request in one form
+    # register both customer and request in one form
+    path('reg-customer-request/', register_customer_request, name='reg-cureq'),
 
 ]
 

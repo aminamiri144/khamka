@@ -7,17 +7,18 @@
           <a class="navbar-brand mx-auto mt-2 flex-fill text-center" href="./">
             <img src="/assets/images/logo.png" alt="", class="img-fluid" />
           </a>
-          <h3 class="my-3">مرحله اول ثبت درخواست</h3>
+          <h3 class="my-3">{{ title_lvl }}</h3>
         </div>
-        <form action="/register/"method="POST">
-          {% csrf_token %}
-          <div class="form-row">
-            
-            <div class="form-group col">{{ data | safe }}</div>
-            <button class="btn btn-lg btn-primary btn-block" type="submit">ارسال</button>
-            <p class="mt-5 mb-3 text-muted text-center">© 1401</p>
+        <div class="form-row">
+          <div class="form-group col">
+            <form action="/register/"method="POST">
+              {% csrf_token %}
+              {{ data | safe }}
+              <br>
+              <button class="btn btn-lg btn-primary btn-block" type="submit">ارسال</button>
+            </form>
           </div>
-        </form>
+        </div>
       </div>
     </div>
     {% comment %} <div class="wrapper vh-100">
@@ -52,7 +53,7 @@
           <div class="col-md">
               <label for="inputDescription">متن درخواست</label>
               <textarea id="inputDescription" class="form-control"></textarea>
-                      </div>
+                              </div>
       </div>
       <button class="btn btn-lg btn-primary btn-block" type="submit">ثبت درخواست</button>
       <p class="mt-5 mb-3 text-muted text-center">© 1401</p>
