@@ -9,7 +9,6 @@ from django.contrib.auth import logout
 from django.shortcuts import redirect
 from requisitions.models import Request
 from letters.models import Letter
-from requisitions.forms import RequestsForm, RequestForm2
 from customers.forms import CustomerForm
 from customers.models import Customer, CodeAuthSMS
 from django.middleware import csrf
@@ -19,6 +18,8 @@ from django.contrib.auth import login, authenticate
 import time
 import random
 import json
+from khamka.forms import Customer_register_form, request_register_form
+from requisitions.forms import RequestForm2
 # class Index(TemplateView):
 #     template_name = "landing/index.html"
 
@@ -155,25 +156,26 @@ class AuthSession:
         remaining_expiry_time = int(time.time()) - int(a.time_expiry)
         return abs(remaining_expiry_time)
 
-    def get_context(self, data, request_is_POST=True, title_lvl=''):
+    def get_context(self, form, request_is_POST=True, title_lvl='', alert = ''):
         ex = ''
         if request_is_POST:
             ex = self.get_expiry_time_status(
                 self.get_session_data('mobile_number'))
-
+        have_form = False if form == None else True
         return {
-            'data': data,
+            'form': form,
             'expiry_code_time': ex,
             'title_lvl': title_lvl,
+            'alert': alert,
+            'have_form': have_form
         }
 
-    def get_register_customer_form(self):
-        return """
-            <label for="fullname">نام و نام خانوادگی</label>
-            <input type="charfield" id="fullname" name="fullname" class="form-control" required>
-            <label for="codemeli">کد ملی</label>
-            <input type="charfield" id="codemeli" name="codemeli" class="form-control" maxlength="10" required>  
-        """
+    def get_customer_register_form(self):
+        return Customer_register_form()
+
+
+def create_customer():
+    pass
 
 
 def two_factor_auth_login(request):
@@ -184,17 +186,24 @@ def two_factor_auth_login(request):
         'ورود به سامانه',
         'تایید شماره تلفن',
         'ثبت نام اولیه در سامانه',
-        'ثبت درخواست'
+        'خوش آمدید'
     ]
     if request.method == 'GET':
-        if 'mobile_auth' in request.session and s.get_session_data('session_lvl') == '1':
-            auth = CodeAuthSMS.objects.filter(
-                phone=s.get_session_data('mobile_number')).latest('time_expiry')
-            print(auth)
-            s.create_new_session()
+        if 'mobile_auth' in request.session:
+            if s.get_session_data('session_lvl') == '1':
+                auth = CodeAuthSMS.objects.filter(
+                    phone=s.get_session_data('mobile_number')).latest('time_expiry')
+                print(auth)
+                s.create_new_session()
+            elif s.get_session_data('session_lvl') == '2':
+                context = s.get_context(form=s.get_customer_register_form(), title_lvl=TITLE_LEVELS[2])
+                return render(request, HTML_FILE, context)
+            elif s.get_session_data('session_lvl') == '3' and s.get_session_data('is_verified'):
+                context = s.get_context(form=None, title_lvl=TITLE_LEVELS[3], alert=s.alert_rase('success', 'با موفقیت وارد سامانه شدید'))
+                return render(request, HTML_FILE, context)
         else:
             s.create_new_session()
-        context = s.get_context(data=s.get_input_phone(
+        context = s.get_context(form=s.get_input_phone(
             '', """placeholder="شماره تلفن را وارد کنید. مثال 09123456789" """), request_is_POST=False, title_lvl=TITLE_LEVELS[0])
         return render(request, HTML_FILE, context)
 
@@ -207,10 +216,8 @@ def two_factor_auth_login(request):
             phone_number = request.POST['phoneNumber']
             s.add_session_data('mobile_number', phone_number)
             s.create_auth_code(phone_number, EXPIRE_CODE_TIME)
-
-            print(request.session['mobile_auth'])
             s.add_session_data('session_lvl', '1')
-            context = s.get_context(data=s.get_input_phone(
+            context = s.get_context(form=s.get_input_phone(
                 phone_number, "disabled") + s.get_input_code(), title_lvl=TITLE_LEVELS[1])
             return render(request, HTML_FILE, context)
 
@@ -221,8 +228,7 @@ def two_factor_auth_login(request):
                 if request_data['status'] == 'finish_time':
                     s.create_new_session()
                     # context = {'data': s.get_input_phone('', ''),'expire_code_time' : EXPIRE_CODE_TIME}
-                    context = s.get_context(data=s.get_input_phone(
-                        '', ''), title_lvl=TITLE_LEVELS[0])
+                    context = s.get_context(form=s.get_input_phone('', ''), title_lvl=TITLE_LEVELS[0], alert=s.alert_rase('danger', '.زمان اعتبار کد ارسالی به پایان رسید! لطفا مجددا تلاش کنید.'))
                     return render(request, HTML_FILE, context)
             except Exception as e:
                 auth_obj = s.get_latest_authCode()
@@ -251,20 +257,35 @@ def two_factor_auth_login(request):
                     print('login failed - time expired')
                 else:
                     print('auth Code is incorrect')
-                    context = s.get_context(data=s.alert_rase('warning', 'کد وارد شده اشتباه است !') + s.get_input_phone(s.get_session_data('mobile_number'), "disabled") + s.get_input_code(), title_lvl=TITLE_LEVELS[1])
+                    context = s.get_context(form=s.get_input_phone(s.get_session_data('mobile_number'), "disabled") + s.get_input_code(), title_lvl=TITLE_LEVELS[1], alert=s.alert_rase('warning', 'کد وارد شده اشتباه است ! مجددا کد را وارد کنید.'))
                     return render(request, HTML_FILE, context)
         elif lvl == '2':
-
-            if request.POST.get('fullname'):
-                print('fullname is :' , request.POST['fullname'])
-                context = s.get_context(data=s.get_register_customer_form(), title_lvl=TITLE_LEVELS[2])
-                print(request.session)
-                return render(request, HTML_FILE, context)
+            customer_form = Customer_register_form(request.POST)
+            if customer_form.is_valid():
+                phoneNumber= s.get_session_data('mobile_number')
+                fullname = request.POST['fullname']
+                codemeli = request.POST['codemeli']
+                sex = request.POST['sex']
+                customer_obj = Customer(
+                    phoneNumber=phoneNumber,
+                    fullname=fullname,
+                    code_meli=codemeli,
+                    sex=sex,
+                )
+                customer_obj.save()
+                s.add_session_data('session_lvl', '3')
+                s.add_session_data('is_verified', True)
+                return redirect('/register')
             else:
-                print('fullname is empty')
-                context = s.get_context(data=s.get_register_customer_form(), title_lvl=TITLE_LEVELS[2])
-                print(request.session)
+                print('form not valid')
+                context = s.get_context(form=Customer_register_form(request.POST), title_lvl=TITLE_LEVELS[2])
                 return render(request, HTML_FILE, context)
+        
+        elif lvl == '3' and s.get_session_data('is_verified'):
+            context = s.get_context(form=None, title_lvl=TITLE_LEVELS[3], alert=s.alert_rase('success', 'با موفقیت وارد سامانه شدید'))
+            return render(request, HTML_FILE, context)
+
+
 
 
 class UserLogoutView(LoginRequiredMixin, View):
