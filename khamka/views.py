@@ -118,7 +118,7 @@ class AuthSession:
         return """
             <label for="phoneNumber">کد 5 رقمی پیامک شده را وارد کنید</label>
             <input type="charfield" id="regcode" name="regcode" class="form-control" placeholder="کد 5 رقمی پیامک شده به شماره موبایل را وارد کنید" maxlength="5" required>
-            <div class="timer" style="justify-content: center; align-items: center; height: 5vh;">
+            <div class="timer" style="margin-top: 10px;">
                 <p>زمان انقضای کد</p>
             </div>"""
 
@@ -159,8 +159,10 @@ class AuthSession:
     def get_context(self, form, request_is_POST=True, title_lvl='', alert = ''):
         ex = ''
         if request_is_POST:
-            ex = self.get_expiry_time_status(
-                self.get_session_data('mobile_number'))
+            try:
+                ex = self.get_expiry_time_status(self.get_session_data('mobile_number'))
+            except:
+                ex = ''
         have_form = False if form == None else True
         return {
             'form': form,
@@ -181,7 +183,7 @@ def create_customer():
 def two_factor_auth_login(request):
     s = AuthSession(request)
     HTML_FILE = 'rere.html'
-    EXPIRE_CODE_TIME = 120
+    EXPIRE_CODE_TIME = 5
     TITLE_LEVELS = [
         'ورود به سامانه',
         'تایید شماره تلفن',
@@ -217,8 +219,7 @@ def two_factor_auth_login(request):
             s.add_session_data('mobile_number', phone_number)
             s.create_auth_code(phone_number, EXPIRE_CODE_TIME)
             s.add_session_data('session_lvl', '1')
-            context = s.get_context(form=s.get_input_phone(
-                phone_number, "disabled") + s.get_input_code(), title_lvl=TITLE_LEVELS[1])
+            context = s.get_context(form=s.get_input_phone(phone_number, "disabled") + s.get_input_code(), title_lvl=TITLE_LEVELS[1])
             return render(request, HTML_FILE, context)
 
         # SESSION LEVEL 1
@@ -228,9 +229,10 @@ def two_factor_auth_login(request):
                 if request_data['status'] == 'finish_time':
                     s.create_new_session()
                     # context = {'data': s.get_input_phone('', ''),'expire_code_time' : EXPIRE_CODE_TIME}
-                    context = s.get_context(form=s.get_input_phone('', ''), title_lvl=TITLE_LEVELS[0], alert=s.alert_rase('danger', '.زمان اعتبار کد ارسالی به پایان رسید! لطفا مجددا تلاش کنید.'))
+                    context = s.get_context(form=s.get_input_phone('', """placeholder="شماره تلفن را وارد کنید. مثال 09123456789" """), title_lvl=TITLE_LEVELS[0], alert = s.alert_rase('danger', 'زمان اعتبار کد پیامک شده به پایان رسید! لطفا مجددا تلاش کنید.'))
                     return render(request, HTML_FILE, context)
             except Exception as e:
+                print(e)
                 auth_obj = s.get_latest_authCode()
                 # بررسی فعال بودن کد تایید و
                 if auth_obj.is_active == True and auth_obj.code == int(request.POST.get('regcode')):

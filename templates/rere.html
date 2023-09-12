@@ -1,32 +1,35 @@
 {% extends "base.html" %}
 {% block content %}
   {% comment %} <div class="wrapper vh-100"> {% endcomment %}
-  <div class="wrapper">
-    {% comment %} <div class="row align-items-center h-100"> {% endcomment %}
-    <div class="row align-items-center">
-      <div class="col-lg-5 col-md-4 col-10 mx-auto">
-        <div class="mx-auto text-center my-4">
-          <a class="navbar-brand mx-auto mt-2 flex-fill text-center" href="./">
-            <img src="/assets/images/logo.png" alt="", class="img-fluid" />
-          </a>
-          <h3 class="my-3">{{ title_lvl }}</h3>
-        </div>
-        {{ alert | safe }}
-        {% if have_form %}
-        <div class="form-row">
-          <div class="form-group col">
-            <form action="/register/"method="POST">
-              {% csrf_token %}
-              {{ form | safe }}
-              <br>
-              <button class="btn btn-lg btn-primary btn-block" type="submit">ارسال</button>
-            </form>
+  <div class="body-content-a">
+    <div class="wrapper">
+      {% comment %} <div class="row align-items-center h-100"> {% endcomment %}
+      <div class="row align-items-center">
+        <div class="col-lg-5 col-md-4 col-10 mx-auto">
+          <div class="mx-auto text-center my-4">
+            <a class="navbar-brand mx-auto mt-2 flex-fill text-center" href="./">
+              <img src="/assets/images/logo.png" alt="", class="img-fluid" />
+            </a>
+            <h3 class="my-3">{{ title_lvl }}</h3>
           </div>
+          {{ alert | safe }}
+          {% if have_form %}
+            <div class="form-row">
+              <div class="form-group col">
+                <form action="/register/" method="POST">
+                  {% csrf_token %}
+                  {{ form | safe }}
+                  <br>
+                  <button class="btn btn-lg btn-primary btn-block" type="submit">ارسال</button>
+                </form>
+              </div>
+            </div>
+          {% endif %}
         </div>
-        {% endif %}
       </div>
-    </div>
-    {% comment %} <div class="wrapper vh-100">
+    {% comment %} </div>
+  </div> {% endcomment %}
+  {% comment %} <div class="wrapper vh-100">
   <div class="row align-items-center h-100">
     <form class="col-lg-6 col-md-8 col-10 mx-auto">
       <div class="mx-auto text-center my-4">
@@ -58,10 +61,10 @@
           <div class="col-md">
               <label for="inputDescription">متن درخواست</label>
               <textarea id="inputDescription" class="form-control"></textarea>
-                                </div>
-      </div>
-      <button class="btn btn-lg btn-primary btn-block" type="submit">ثبت درخواست</button>
-      <p class="mt-5 mb-3 text-muted text-center">© 1401</p>
+                                    </div>
+        </div>
+        <button class="btn btn-lg btn-primary btn-block" type="submit">ثبت درخواست</button>
+        <p class="mt-5 mb-3 text-muted text-center">© 1401</p>
     </form>
   </div>
 </div> {% endcomment %}
@@ -72,6 +75,7 @@
   var timer = setInterval(function() {
   var minutes = Math.floor(seconds / 60);
   var remainingSeconds = seconds % 60;
+  const body_content_a = document.querySelector('.body-content-a');
   if (remainingSeconds < 10) {
     remainingSeconds = "0" + remainingSeconds;
   }
@@ -87,17 +91,12 @@
       headers: {
         'Content-Type': 'application/json',
         'X-CSRFToken': '{{ csrf_token }}'
-
       }
     });
     fetch(request)
-    .then(response => {
-        window.location.replace(response.url);
-    })
-    .then(data => console.log(data))
+    .then(response => response.text())
+    .then(data => {body_content_a.innerHTML = data;})
     .catch(error => console.error(error));
-
-
 
   } else {
     seconds--;
