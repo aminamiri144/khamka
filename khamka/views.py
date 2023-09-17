@@ -1,12 +1,11 @@
 from django.core.exceptions import ValidationError
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.contrib.auth.views import LoginView
 from django.views.generic import TemplateView
 from django.views import View
 from django.contrib.auth import logout
-from django.shortcuts import redirect
 from requisitions.models import Request
 from letters.models import Letter
 from customers.forms import CustomerForm
@@ -104,10 +103,10 @@ class AuthSession:
         self.req = request
 
     def get_session_data(self, data):
-        return self.req.session['mobile_auth'][0][data]
+        return self.req.session['authentication'][0][data]
 
     def add_session_data(self, key, value):
-        self.req.session['mobile_auth'][0][key] = value
+        self.req.session['authentication'][0][key] = value
         self.req.session.modified = True
 
     def get_input_phone(self, value, more):
@@ -123,7 +122,7 @@ class AuthSession:
             </div>"""
 
     def create_new_session(self):
-        self.req.session['mobile_auth'] = [{
+        self.req.session['authentication'] = [{
             'mobile_number': '',
             'is_verified': False,
             'session_lvl': '0',
@@ -183,7 +182,7 @@ def create_customer():
 def two_factor_auth_login(request):
     s = AuthSession(request)
     HTML_FILE = 'rere.html'
-    EXPIRE_CODE_TIME = 5
+    EXPIRE_CODE_TIME = 120 # زمان اعتبار کد تایید به ثانیه
     TITLE_LEVELS = [
         'ورود به سامانه',
         'تایید شماره تلفن',
@@ -191,29 +190,32 @@ def two_factor_auth_login(request):
         'خوش آمدید'
     ]
     if request.method == 'GET':
-        if 'mobile_auth' in request.session:
+        # در این شرط بررسی می شود سشن مربوطه ساخته شده یا خیر 
+        if 'authentication' in request.session:
+            # در این مرحله اگر سشن لول یک باشد ، سشن جدید ساخته میشود و کد اعتبار سنجی قبلی غیر فعال می شود
             if s.get_session_data('session_lvl') == '1':
-                auth = CodeAuthSMS.objects.filter(
-                    phone=s.get_session_data('mobile_number')).latest('time_expiry')
+                auth = CodeAuthSMS.objects.filter(phone=s.get_session_data('mobile_number')).latest('time_expiry')
                 print(auth)
                 s.create_new_session()
+            # اگر سشن لول برابر 2 باشد یعنی کاربر ثبت نام نکرده و فرم ثبت نام براش ارسال میشه
             elif s.get_session_data('session_lvl') == '2':
                 context = s.get_context(form=s.get_customer_register_form(), title_lvl=TITLE_LEVELS[2])
                 return render(request, HTML_FILE, context)
+            # اگر سشن لول برابر 3 باشد و کاربر تایید شده باشد کاربر به صفحه پنل کاربری هدایت می شود
             elif s.get_session_data('session_lvl') == '3' and s.get_session_data('is_verified'):
                 context = s.get_context(form=None, title_lvl=TITLE_LEVELS[3], alert=s.alert_rase('success', 'با موفقیت وارد سامانه شدید'))
                 return render(request, HTML_FILE, context)
+        # اگر سشن وجود نداشته باشد سشن ایجاد میشود و فرم وارد کردن شماره موبایل ارسال می شود
         else:
             s.create_new_session()
-        context = s.get_context(form=s.get_input_phone(
-            '', """placeholder="شماره تلفن را وارد کنید. مثال 09123456789" """), request_is_POST=False, title_lvl=TITLE_LEVELS[0])
+        context = s.get_context(form=s.get_input_phone('', """placeholder="شماره تلفن را وارد کنید. مثال 09123456789" """), request_is_POST=False, title_lvl=TITLE_LEVELS[0])
         return render(request, HTML_FILE, context)
 
     # POST request
     if request.method == 'POST':
         lvl = s.get_session_data('session_lvl')
-
         # SESSION LEVEL 0
+        # اگر سشن لول  0 باشد و ریکوئست از نوع پست ، شماره موبایل وارد شده کاربر در یافت می شود و کد اعتبار سنجی ایجاد و ارسال می شود
         if lvl == '0':
             phone_number = request.POST['phoneNumber']
             s.add_session_data('mobile_number', phone_number)
@@ -223,7 +225,9 @@ def two_factor_auth_login(request):
             return render(request, HTML_FILE, context)
 
         # SESSION LEVEL 1
+        # در این لول کابر کد تایید را ارسال کرده و یا زمان اعتبار کد به پایان رسیده
         elif lvl == '1':
+            # بررسی میکند اگر زمان اعتبار سنجی کد تایید به پایان رسیده باشد، کاربر به فرم ورود مجدد شماره موبایل هدایت می شود
             try:
                 request_data = json.loads(request.body)
                 if request_data['status'] == 'finish_time':
@@ -231,36 +235,35 @@ def two_factor_auth_login(request):
                     # context = {'data': s.get_input_phone('', ''),'expire_code_time' : EXPIRE_CODE_TIME}
                     context = s.get_context(form=s.get_input_phone('', """placeholder="شماره تلفن را وارد کنید. مثال 09123456789" """), title_lvl=TITLE_LEVELS[0], alert = s.alert_rase('danger', 'زمان اعتبار کد پیامک شده به پایان رسید! لطفا مجددا تلاش کنید.'))
                     return render(request, HTML_FILE, context)
-            except Exception as e:
-                print(e)
+            # اگر زمان کد اعتبار سنجی معتبر بود وارد مرحله زیر می شود
+            except:
                 auth_obj = s.get_latest_authCode()
-                # بررسی فعال بودن کد تایید و
+                #بررسی فعال بودن و درست بودن کد تایید ارسال شده
                 if auth_obj.is_active == True and auth_obj.code == int(request.POST.get('regcode')):
-                    print('login successful')
-                    # بررسی شماره تلفن و ورود به صورت کارمند
-                    try:
-                        user_obj = User.objects.filter(
-                            username__exact=auth_obj.phone)[0].username
-                    except:
-                        user_obj = None
-                    # بررسی شماره تلفن و ورود به عنوان ارباب رجوع
-                    if auth_obj.phone == user_obj:
+                    # در این مرحله بررسی میشود که کاربر یوزر وارد شده کارمند هست یا خیر، اگر کارمند بود لاگین می شو.د و به پنل اصلی هدایت می شود
+                    if User.objects.filter(username__exact=auth_obj.phone).exists():
                         user = User.objects.get(username__exact=auth_obj.phone)
-                        # user.backend = 'django.contrib.auth.backends.ModelBackend'
                         login(request, user)
-                        print('user is admin -> login ')
                         return redirect('/panel')
-
-                    elif not Customer.objects.filter(phoneNumber=auth_obj.phone).exists():
+                    # بررسی شماره تلفن و ورود به عنوان ارباب رجوع
+                    elif Customer.objects.filter(phoneNumber=auth_obj.phone).exists():
+                        s.add_session_data('session_lvl', '3')
+                        return redirect('/register')
+                    # در حالت زیر کاربر وجود ندارد و باید به فرم ثبت نام هدایت شود
+                    else:
                         s.add_session_data('session_lvl', '2')
                         return redirect('/register')
-
+                # در این حالت سشن کد تایید غیر فعال است و مجدد باید به مرحله سشن جدید در لول 0 هدایت شود
                 elif auth_obj.is_active == False:
-                    print('login failed - time expired')
+                    s.add_session_data('session_lvl', '0')
+                    return redirect('/register')
+                # در این مرحله اگر کد وارد شده اشتباه باشد مجدد کاربر به فرم وارد کردن کد هدایت میشود با پیغام مربوطه
                 else:
                     print('auth Code is incorrect')
                     context = s.get_context(form=s.get_input_phone(s.get_session_data('mobile_number'), "disabled") + s.get_input_code(), title_lvl=TITLE_LEVELS[1], alert=s.alert_rase('warning', 'کد وارد شده اشتباه است ! مجددا کد را وارد کنید.'))
                     return render(request, HTML_FILE, context)
+        # SESSION LEVEL 2
+        # در این مرحله کاربر وارد شده کاستومر یا ارباب رجوعی است که قبلا ثبت نام نکرده و ثبت نام او انجام می شود
         elif lvl == '2':
             customer_form = Customer_register_form(request.POST)
             if customer_form.is_valid():
@@ -278,11 +281,13 @@ def two_factor_auth_login(request):
                 s.add_session_data('session_lvl', '3')
                 s.add_session_data('is_verified', True)
                 return redirect('/register')
+            # فرم ارسالی کاربر کامل نیست و مجدد باید تکمیل کند
             else:
                 print('form not valid')
                 context = s.get_context(form=Customer_register_form(request.POST), title_lvl=TITLE_LEVELS[2])
                 return render(request, HTML_FILE, context)
-        
+        # SESSION LEVEL 3
+        # فکر کنم با توجه به اینکه نوع ریدایرکت های قبلی گت هست این شرط هیچگاه برقرار نیست و باید پاک کرد
         elif lvl == '3' and s.get_session_data('is_verified'):
             context = s.get_context(form=None, title_lvl=TITLE_LEVELS[3], alert=s.alert_rase('success', 'با موفقیت وارد سامانه شدید'))
             return render(request, HTML_FILE, context)

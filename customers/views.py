@@ -4,6 +4,8 @@ from django.views.generic.detail import DetailView
 from khamka.views import LoginRequiredMixin, SuccessMessageMixin
 from customers.models import Customer
 from customers.forms import CustomerForm
+from django.shortcuts import render, redirect
+
 
 
 # Create your views here.
@@ -43,3 +45,14 @@ class CustomerUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
 class CustomerDetailView(LoginRequiredMixin, DetailView):
     model = Customer
     template_name = 'customers/detail.html'
+
+
+
+
+
+
+def coustomer_panel(request):
+    if request.method == 'GET':
+        if 'authentication' in request.session:
+            if request.session['authentication']['is_verified'] == True:
+                return render(request, 'customers/detail.html' , {})

@@ -4,3 +4,10 @@
     font-size: 80%;
     color: #dc3545;
 }
+
+/* @media (max-width: 768px) {
+    .fix-mobile-with {
+        max-width: 412px;
+        overflow-x: hidden;
+    }
+} */

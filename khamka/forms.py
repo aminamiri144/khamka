@@ -1,4 +1,6 @@
 from django import forms
+from khamka.utils import validate_code_meli
+from django.core.exceptions import ValidationError
 
 SEX = (
         ('2', 'زن'),
@@ -13,6 +15,11 @@ class Customer_register_form(forms.Form):
     fullname = forms.CharField(label="نام و نام خانوادگی", max_length=40, required=False) 
     codemeli = forms.CharField(label="کد ملی", max_length=10, min_length=10, required=False)
     sex = forms.ChoiceField(choices=SEX ,label="جنسیت", required=False)
+
+    def clean_codemeli(self):
+        codemeli = self.cleaned_data['codemeli']
+        if len(codemeli) > 1 and not validate_code_meli(codemeli):
+            raise ValidationError(f"کد ملی وارد شده معتبر نیست")
 
 
 class request_register_form(forms.Form):
