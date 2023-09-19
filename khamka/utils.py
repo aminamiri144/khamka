@@ -1,3 +1,4 @@
+
 def validate_code_meli(codemeli):
     b = False
     invali = ["0000000000", "1111111111", "2222222222", "3333333333", "4444444444",
@@ -15,3 +16,5 @@ def validate_code_meli(codemeli):
         if (c == 0 and A == ba) or (c == 1 and A == ba) or (c > 1 and A == B):
             b = True
     return b
+
+

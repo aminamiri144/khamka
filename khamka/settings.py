@@ -115,11 +115,11 @@ CACHES = {
     # … default cache config and others
     "default": {
         "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": "redis://:ywhslWjz60RNmpD6pNFc2L56@esme.iran.liara.ir:30887/0",
+        "LOCATION": env('REDIS'),
     },
     "select2": {
         "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": "redis://:ywhslWjz60RNmpD6pNFc2L56@esme.iran.liara.ir:30887/0",
+        "LOCATION": env('REDIS'),
         "OPTIONS": {
             "CLIENT_CLASS": "django_redis.client.DefaultClient",
         }

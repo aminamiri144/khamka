@@ -152,3 +152,13 @@ class Attachment(models.Model):
 
     def __str__(self):
         return f"{self.name}"
+
+
+
+class Setting(models.Model):
+    class Meta:
+        verbose_name = 'تنظیم'
+        verbose_name_plural = 'تنظیمات'
+
+    key = models.CharField(max_length=50, verbose_name='عنوان')
+    value = models.CharField(max_length=50, verbose_name='مقدار')

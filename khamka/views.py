@@ -1,4 +1,3 @@
-from django.core.exceptions import ValidationError
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.shortcuts import render, redirect
@@ -17,8 +16,9 @@ from django.contrib.auth import login, authenticate
 import time
 import random
 import json
-from khamka.forms import Customer_register_form, request_register_form
+from khamka.forms import Customer_register_form
 from requisitions.forms import RequestForm2
+from .sms import SMS
 # class Index(TemplateView):
 #     template_name = "landing/index.html"
 
@@ -35,7 +35,7 @@ class LoginRequiredMixin(object):
         self = cls()
         view = super(LoginRequiredMixin, cls).as_view(**kwargs)
         if self.login_required:
-            return login_required(view)
+            return login_required(view, login_url='/register')
         else:
             return view
 
@@ -139,6 +139,10 @@ class AuthSession:
         )
         authCode.save()
 
+        send_auth_code = SMS()
+        send_auth_code.send(phone_number, code, '160216')
+        print(send_auth_code.status)
+
     def get_latest_authCode(self):
         return CodeAuthSMS.objects.filter(phone=self.get_session_data('mobile_number')).latest('time_expiry')
 
@@ -163,6 +167,9 @@ class AuthSession:
             except:
                 ex = ''
         have_form = False if form == None else True
+
+        print('### session:  ',self.req.session['authentication'][0])
+
         return {
             'form': form,
             'expiry_code_time': ex,
@@ -189,6 +196,7 @@ def two_factor_auth_login(request):
         'ثبت نام اولیه در سامانه',
         'خوش آمدید'
     ]
+    
     if request.method == 'GET':
         # در این شرط بررسی می شود سشن مربوطه ساخته شده یا خیر 
         if 'authentication' in request.session:
@@ -248,6 +256,7 @@ def two_factor_auth_login(request):
                     # بررسی شماره تلفن و ورود به عنوان ارباب رجوع
                     elif Customer.objects.filter(phoneNumber=auth_obj.phone).exists():
                         s.add_session_data('session_lvl', '3')
+                        s.add_session_data('is_verified', True)
                         return redirect('/register')
                     # در حالت زیر کاربر وجود ندارد و باید به فرم ثبت نام هدایت شود
                     else:
@@ -313,7 +322,7 @@ class UserLogoutView(LoginRequiredMixin, View):
         # log_save(request.user, 1, 2, True)
         logout(request)
 
-        return redirect('/accounts/login')
+        return redirect('/register')
 
 
 def register_customer_request(request):
