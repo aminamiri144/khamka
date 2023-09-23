@@ -16,7 +16,7 @@ from django.contrib.auth import login, authenticate
 import time
 import random
 import json
-from khamka.forms import Customer_register_form
+from khamka.forms import Customer_register_form, Mobile_form
 from requisitions.forms import RequestForm2
 from .sms import SMS
 # class Index(TemplateView):
@@ -216,7 +216,8 @@ def two_factor_auth_login(request):
         # اگر سشن وجود نداشته باشد سشن ایجاد میشود و فرم وارد کردن شماره موبایل ارسال می شود
         else:
             s.create_new_session()
-        context = s.get_context(form=s.get_input_phone('', """placeholder="شماره تلفن را وارد کنید. مثال 09123456789" """), request_is_POST=False, title_lvl=TITLE_LEVELS[0])
+        # context = s.get_context(form=s.get_input_phone('', """placeholder="شماره تلفن را وارد کنید. مثال 09123456789" """), request_is_POST=False, title_lvl=TITLE_LEVELS[0])
+        context = s.get_context(form=Mobile_form(), request_is_POST=False, title_lvl=TITLE_LEVELS[0])
         return render(request, HTML_FILE, context)
 
     # POST request
@@ -225,11 +226,15 @@ def two_factor_auth_login(request):
         # SESSION LEVEL 0
         # اگر سشن لول  0 باشد و ریکوئست از نوع پست ، شماره موبایل وارد شده کاربر در یافت می شود و کد اعتبار سنجی ایجاد و ارسال می شود
         if lvl == '0':
-            phone_number = request.POST['phoneNumber']
-            s.add_session_data('mobile_number', phone_number)
-            s.create_auth_code(phone_number, EXPIRE_CODE_TIME)
-            s.add_session_data('session_lvl', '1')
-            context = s.get_context(form=s.get_input_phone(phone_number, "disabled") + s.get_input_code(), title_lvl=TITLE_LEVELS[1])
+            mobile_form = Mobile_form(request.POST)
+            if mobile_form.is_valid():
+                phone_number = mobile_form.cleaned_data['mobile']
+                s.add_session_data('mobile_number', phone_number)
+                s.create_auth_code(phone_number, EXPIRE_CODE_TIME)
+                s.add_session_data('session_lvl', '1')
+                context = s.get_context(form=s.get_input_phone(phone_number, "disabled") + s.get_input_code(), title_lvl=TITLE_LEVELS[1])
+            else:
+                context = s.get_context(form=Mobile_form(), title_lvl=TITLE_LEVELS[1], alert=s.alert_rase('warning', 'لطفا تیک گزینه کپچا را بزنید.'))
             return render(request, HTML_FILE, context)
 
         # SESSION LEVEL 1

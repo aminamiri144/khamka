@@ -34,6 +34,10 @@ ADMIN_URL = env('ADMIN_URL')
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = env('SECRET_KEY')
 
+RECAPTCHA_PUBLIC_KEY = env('RECAPTCHA_PUBLIC_KEY')
+RECAPTCHA_PRIVATE_KEY = env('RECAPTCHA_PRIVATE_KEY')
+
+
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False if env('DEBUG') == 'false' else True
 
@@ -60,6 +64,7 @@ INSTALLED_APPS = [
     'letters.apps.LettersConfig',
     'django_select2',
     'django_cleanup.apps.CleanupConfig',
+    'captcha',
 ]
 
 MIDDLEWARE = [

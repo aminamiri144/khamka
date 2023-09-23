@@ -2,10 +2,28 @@ from django import forms
 from khamka.utils import validate_code_meli
 from django.core.exceptions import ValidationError
 
+
+from captcha.fields import ReCaptchaField
+from captcha.widgets import ReCaptchaV2Checkbox
+
+
 SEX = (
         ('2', 'زن'),
         ('1', 'مرد'),
     )
+
+class Mobile_form(forms.Form):
+    def __init__(self, *args, **kwargs):
+        super(Mobile_form, self).__init__(*args, **kwargs)
+        for visible in self.visible_fields():
+            visible.field.widget.attrs['class'] = 'form-control'
+
+
+    mobile = forms.CharField(label='شماره موبایل', max_length=11, required=True)
+    captcha = ReCaptchaField(widget=ReCaptchaV2Checkbox)
+
+
+
 class Customer_register_form(forms.Form):
     def __init__(self, *args, **kwargs):
         super(Customer_register_form, self).__init__(*args, **kwargs)
